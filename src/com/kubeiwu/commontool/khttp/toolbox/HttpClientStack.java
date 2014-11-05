@@ -94,10 +94,10 @@ public class HttpClientStack implements HttpStack {
                 // This is the deprecated way that needs to be handled for backwards compatibility.
                 // If the request's post body is null, then the assumption is that the request is
                 // GET.  Otherwise, it is assumed that the request is a POST.
-                byte[] postBody = request.getPostBody();
+                byte[] postBody = request.getBody();
                 if (postBody != null) {
                     HttpPost postRequest = new HttpPost(request.getUrl());
-                    postRequest.addHeader(HEADER_CONTENT_TYPE, request.getPostBodyContentType());
+                    postRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
                     HttpEntity entity;
                     entity = new ByteArrayEntity(postBody);
                     postRequest.setEntity(entity);

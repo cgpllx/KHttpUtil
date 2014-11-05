@@ -1,11 +1,21 @@
 package com.kubeiwu.commontool;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends  Activity {
+import com.kubeiwu.commontool.khttp.Request.Method;
+import com.kubeiwu.commontool.khttp.RequestQueue;
+import com.kubeiwu.commontool.khttp.Response.Listener;
+import com.kubeiwu.commontool.khttp.requestimpl.JsonObjectRequest;
+import com.kubeiwu.commontool.khttp.toolbox.Volley;
+
+public class MainActivity extends Activity {
+	public static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,5 +40,17 @@ public class MainActivity extends  Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	public void text1() {
+		String url="url";
+		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		mQueue.add(new JsonObjectRequest(Method.GET, url, null, new Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				Log.d(TAG, "response : " + response.toString());
+			}
+		}, null));
+		mQueue.start();
 	}
 }

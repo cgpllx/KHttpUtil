@@ -183,7 +183,7 @@ public class HurlStack implements HttpStack {
                 // This is the deprecated way that needs to be handled for backwards compatibility.
                 // If the request's post body is null, then the assumption is that the request is
                 // GET.  Otherwise, it is assumed that the request is a POST.
-                byte[] postBody = request.getPostBody();
+                byte[] postBody = request.getBody();
                 if (postBody != null) {
                     // Prepare output. There is no need to set Content-Length explicitly,
                     // since this is handled by HttpURLConnection using the size of the prepared
@@ -191,7 +191,7 @@ public class HurlStack implements HttpStack {
                     connection.setDoOutput(true);
                     connection.setRequestMethod("POST");
                     connection.addRequestProperty(HEADER_CONTENT_TYPE,
-                            request.getPostBodyContentType());
+                            request.getBodyContentType());
                     DataOutputStream out = new DataOutputStream(connection.getOutputStream());
                     out.write(postBody);
                     out.close();
