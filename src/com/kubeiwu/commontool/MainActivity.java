@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kubeiwu.commontool.khttp.DefaultRetryPolicy;
 import com.kubeiwu.commontool.khttp.Request.Method;
 import com.kubeiwu.commontool.khttp.RequestQueue;
 import com.kubeiwu.commontool.khttp.Response.Listener;
 import com.kubeiwu.commontool.khttp.requestimpl.JsonObjectRequest;
+import com.kubeiwu.commontool.khttp.requestimpl.StringRequest;
 import com.kubeiwu.commontool.khttp.toolbox.Volley;
 
 public class MainActivity extends Activity {
@@ -21,6 +23,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		text2();
 	}
 
 	@Override
@@ -50,7 +53,14 @@ public class MainActivity extends Activity {
 			public void onResponse(JSONObject response) {
 				Log.d(TAG, "response : " + response.toString());
 			}
-		}, null));
+		}, null).setShouldCache(true));
+		mQueue.start();
+	}
+	public void text2() {
+//		String url="http://video.konka2cloud.cn/client/GetTV";
+		String url="http://www.google.com";
+		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		mQueue.add(new StringRequest(url, null, null).setRetryPolicy(new DefaultRetryPolicy()));
 		mQueue.start();
 	}
 }

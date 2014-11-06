@@ -69,13 +69,13 @@ public interface Cache {
         public byte[] data;
 
         /** ETag for cache coherency. */
-        public String etag;
+        public String etag;//验证文件一致性用的
 
         /** Date of this response as reported by the server. */
-        public long serverDate;
+        public long serverDate;//服务器日期
 
         /** TTL for this record. */
-        public long ttl;
+        public long ttl;//要保存到哪个时间
 
         /** Soft TTL for this record. */
         public long softTtl;
@@ -84,7 +84,7 @@ public interface Cache {
         public Map<String, String> responseHeaders = Collections.emptyMap();
 
         /** True if the entry is expired. */
-        public boolean isExpired() {
+        public boolean isExpired() { //是否过期的
             return this.ttl < System.currentTimeMillis();
         }
 

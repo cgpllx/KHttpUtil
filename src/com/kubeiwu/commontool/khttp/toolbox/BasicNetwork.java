@@ -81,15 +81,15 @@ public class BasicNetwork implements Network {
 
     @Override
     public NetworkResponse performRequest(Request<?> request) throws VolleyError {
-        long requestStart = SystemClock.elapsedRealtime();
-        while (true) {
+        long requestStart = SystemClock.elapsedRealtime();//开始请求的时间标识
+        while (true) {//这里的while是重试用，如果不重试，会拋异常退出while循环 
             HttpResponse httpResponse = null;
             byte[] responseContents = null;
             Map<String, String> responseHeaders = new HashMap<String, String>();
             try {
                 // Gather headers.
                 Map<String, String> headers = new HashMap<String, String>();
-                addCacheHeaders(headers, request.getCacheEntry());
+                addCacheHeaders(headers, request.getCacheEntry());//从cache中添加请求头
                 httpResponse = mHttpStack.performRequest(request, headers);
                 StatusLine statusLine = httpResponse.getStatusLine();
                 int statusCode = statusLine.getStatusCode();
@@ -103,7 +103,7 @@ public class BasicNetwork implements Network {
 
                 // Some responses such as 204s do not have content.  We must check.
                 if (httpResponse.getEntity() != null) {
-                  responseContents = entityToBytes(httpResponse.getEntity());
+                  responseContents = entityToBytes(httpResponse.getEntity());//entity转成byte[];
                 } else {
                   // Add 0 byte response as a way of honestly representing a
                   // no-content request.
@@ -111,13 +111,13 @@ public class BasicNetwork implements Network {
                 }
 
                 // if the request is slow, log it.
-                long requestLifetime = SystemClock.elapsedRealtime() - requestStart;
-                logSlowRequests(requestLifetime, request, responseContents, statusLine);
+                long requestLifetime = SystemClock.elapsedRealtime() - requestStart;//请求花的时长
+                logSlowRequests(requestLifetime, request, responseContents, statusLine);//log信息
 
                 if (statusCode < 200 || statusCode > 299) {
                     throw new IOException();
                 }
-                return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
+                return new NetworkResponse(statusCode, responseContents, responseHeaders, false);//正确响应
             } catch (SocketTimeoutException e) {
                 attemptRetryOnException("socket", request, new TimeoutError());
             } catch (ConnectTimeoutException e) {
@@ -169,13 +169,13 @@ public class BasicNetwork implements Network {
      * request's retry policy, a timeout exception is thrown.
      * @param request The request to use.
      */
-    private static void attemptRetryOnException(String logPrefix, Request<?> request,
+    private static void attemptRetryOnException(String  logPrefix, Request<?> request,
             VolleyError exception) throws VolleyError {
         RetryPolicy retryPolicy = request.getRetryPolicy();
         int oldTimeout = request.getTimeoutMs();
 
         try {
-            retryPolicy.retry(exception);
+            retryPolicy.retry(exception);//根据策略，如果重试，不会会拋异常
         } catch (VolleyError e) {
             request.addMarker(
                     String.format("%s-timeout-giveup [timeout=%s]", logPrefix, oldTimeout));
