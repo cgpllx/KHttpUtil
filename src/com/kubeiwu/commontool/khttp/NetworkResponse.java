@@ -57,7 +57,7 @@ public class NetworkResponse {
     public final byte[] data;
 
     /** Response headers. */
-    public final Map<String, String> headers;
+    public final Map<String, String> headers;//所有返回的headers都在这里
 
     /** True if the server returned a 304 (Not Modified). */
     public final boolean notModified;

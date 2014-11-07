@@ -43,7 +43,7 @@ public class HttpHeaderParser {
 
         long serverDate = 0;
         long serverExpires = 0;
-        long softExpire = 0;
+        long softExpire = 0;  
         long maxAge = 0;
         boolean hasCacheControl = false;
 

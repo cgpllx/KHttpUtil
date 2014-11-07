@@ -122,14 +122,14 @@ public class NetworkDispatcher extends Thread {
 				// Write to cache if applicable.
 				// TODO: Only update cache metadata instead of entire record for 304s.
 				if (request.shouldCache() && response.cacheEntry != null) {
-					mCache.put(request.getCacheKey(), response.cacheEntry);
+					mCache.put(request.getCacheKey(), response.cacheEntry);// 网络请求的缓存的key是url
 					request.addMarker("network-cache-written");
 				}
 
 				// Post the response back.
 				request.markDelivered();
 				mDelivery.postResponse(request, response);
-			} catch (VolleyError volleyError) {// 请求数据异常到这里，根据策略重试
+			} catch (VolleyError volleyError) { 
 				parseAndDeliverNetworkError(request, volleyError);
 			} catch (Exception e) {
 				VolleyLog.e(e, "Unhandled exception %s", e.toString());
