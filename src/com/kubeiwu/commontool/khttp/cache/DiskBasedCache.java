@@ -228,7 +228,7 @@ public class DiskBasedCache implements Cache {
 	 */
 	private String getFilenameForKey(String key) {
 		int firstHalfLength = key.length() / 2;
-		String localFilename = String.valueOf(key.substring(0, firstHalfLength).hashCode());
+		String localFilename = String.valueOf(key.substring(0, firstHalfLength).hashCode()); //减小重复率
 		localFilename += String.valueOf(key.substring(firstHalfLength).hashCode());
 		return localFilename;
 	}

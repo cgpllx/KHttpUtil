@@ -17,6 +17,8 @@
 package com.kubeiwu.commontool.khttp.toolbox;
 
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
@@ -71,6 +73,7 @@ public class HttpHeaderParser {
                 } else if (token.equals("must-revalidate") || token.equals("proxy-revalidate")) {
                     maxAge = 0;
                 }
+//                PriorityBlockingQueue f;
             }
         }
 
