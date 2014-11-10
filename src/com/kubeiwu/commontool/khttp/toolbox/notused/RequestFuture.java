@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kubeiwu.commontool.khttp.toolbox;
+package com.kubeiwu.commontool.khttp.toolbox.notused;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

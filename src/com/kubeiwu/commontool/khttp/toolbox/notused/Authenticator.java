@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kubeiwu.commontool.khttp.toolbox;
+package com.kubeiwu.commontool.khttp.toolbox.notused;
 
 import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
 
