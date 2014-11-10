@@ -82,7 +82,7 @@ public class HttpHeaderParser {
         serverEtag = headers.get("ETag");
 
         // Cache-Control takes precedence over an Expires header, even if both exist and Expires
-        // is more restrictive.
+        // is more restrictive. git
         if (hasCacheControl) {
             softExpire = now + maxAge * 1000;
         } else if (serverDate > 0 && serverExpires >= serverDate) {
