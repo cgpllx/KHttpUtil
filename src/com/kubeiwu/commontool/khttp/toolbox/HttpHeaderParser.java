@@ -72,7 +72,7 @@ public class HttpHeaderParser {
                     maxAge = 0;
                 }
             }
-        }
+        }  
 
         headerValue = headers.get("Expires");  
         if (headerValue != null) {
