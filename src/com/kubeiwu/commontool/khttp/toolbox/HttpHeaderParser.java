@@ -77,7 +77,7 @@ public class HttpHeaderParser {
         }  
 
         headerValue = headers.get("Expires");  
-        if (headerValue != null) {
+        if (headerValue != null) {   
             serverExpires = parseDateAsEpoch(headerValue);
         }
 
