@@ -38,12 +38,12 @@ public class Volley {
      *
      * @param context A {@link Context} to use for creating the cache dir.
      * @param stack An {@link HttpStack} to use for the network, or null for default.
-     * @return A started {@link RequestQueue} instance.
+     * @return A started {@link RequestQueue} instance. d
      */
     public static RequestQueue newRequestQueue(Context context, HttpStack stack) {
         File cacheDir = new File(context.getCacheDir(), DEFAULT_CACHE_DIR);
 
-        String userAgent = "volley/0";
+        String userAgent = "volley/0"; 
         try {
             String packageName = context.getPackageName();
             PackageInfo info = context.getPackageManager().getPackageInfo(packageName, 0);

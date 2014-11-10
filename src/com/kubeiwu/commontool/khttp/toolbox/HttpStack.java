@@ -43,3 +43,4 @@ public interface HttpStack {
         throws IOException, AuthFailureError;
 
 }
+   
