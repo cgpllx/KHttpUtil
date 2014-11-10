@@ -27,7 +27,7 @@ import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
 /**
  * An HTTP stack abstraction.
  */
-public interface HttpStack {
+public interface HttpStack {   
     /**
      * Performs an HTTP request with the given parameters.
      *
