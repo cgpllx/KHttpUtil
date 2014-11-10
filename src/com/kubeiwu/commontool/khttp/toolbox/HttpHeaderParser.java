@@ -71,7 +71,7 @@ public class HttpHeaderParser {
                 } else if (token.equals("must-revalidate") || token.equals("proxy-revalidate")) {
                     maxAge = 0;
                 }
-            }
+            }  
         }  
 
         headerValue = headers.get("Expires");  
