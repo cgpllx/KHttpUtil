@@ -18,7 +18,7 @@ import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
 
 public class KGsonArrayRequest<T> extends KGsonRequest<List<T>> {
 
-	public KGsonArrayRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<List<T>> listener, ErrorListener errorListener, Class<? extends T> clazz) {
+	public KGsonArrayRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<List<T>> listener, ErrorListener errorListener, Class<T> clazz) {
 		super(method, url, headers, params, listener, errorListener, clazz);
 	}
 

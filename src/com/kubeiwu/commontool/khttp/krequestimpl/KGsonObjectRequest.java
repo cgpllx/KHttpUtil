@@ -13,9 +13,10 @@ import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
 
 public class KGsonObjectRequest<T> extends KGsonRequest<T> {
 
-	public KGsonObjectRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<T> listener, ErrorListener errorListener, Class<? extends T> clazz) {
+	public KGsonObjectRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<T> listener, ErrorListener errorListener, Class<T> clazz) {
 		super(method, url, headers, params, listener, errorListener, clazz);
 	}
+
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
 		try {
