@@ -1,6 +1,7 @@
 package com.kubeiwu.commontool;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -18,8 +19,8 @@ import com.kubeiwu.commontool.khttp.Response.ErrorListener;
 import com.kubeiwu.commontool.khttp.Response.Listener;
 import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
 import com.kubeiwu.commontool.khttp.exception.VolleyError;
+import com.kubeiwu.commontool.khttp.krequestimpl.KGsonArrayRequest;
 import com.kubeiwu.commontool.khttp.krequestimpl.KGsonObjectRequest;
-import com.kubeiwu.commontool.khttp.krequestimpl.KJsonObjectRequest;
 import com.kubeiwu.commontool.khttp.requestimpl.JsonObjectRequest;
 import com.kubeiwu.commontool.khttp.requestimpl.StringRequest;
 import com.kubeiwu.commontool.khttp.toolbox.Volley;
@@ -32,7 +33,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		text4();
+		text6();
 	}
 
 	@Override
@@ -151,41 +152,45 @@ public class MainActivity extends Activity {
 			}
 			
 		};
-		mQueue.add(new KGsonObjectRequest<MainActivity>(Method.GET, url, null, null, new Listener<MainActivity>() {
-
-			@Override
-			public void onResponse(MainActivity response) {
-				// TODO Auto-generated method stub
-				
-			}
-		}, null));
+//		mQueue.add(new KGsonObjectRequest<MainActivity>(Method.GET, url, null, null, new Listener<MainActivity>() {
+//
+//			@Override
+//			public void onResponse(MainActivity response) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		}, null));
 		mQueue.start();
 	}
 	public void text6() {
-		final HashMap<String, String> map = new HashMap<String, String>();
-		map.put("AccountLogin[username]", "echo");
-		map.put("AccountLogin[password]", "123456");
-		// String url="http://video.konka2cloud.cn/client/GetTV";
-		JSONObject jsonObject=new JSONObject(map);
-		
-		String url = "http://video.konkacloud.cn/account/account/login";
+		String url = "http://market.konkacloud.cn/client/search1?id=22555";
 		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
-		ErrorListener lin = new ErrorListener() {
+		mQueue.add(new KGsonObjectRequest<Pojo>(Method.GET, url, null, null, new Listener<Pojo>() {
 			
 			@Override
-			public void onErrorResponse(VolleyError error) {
-				System.out.println("结果:" + error.toString());
+			public void onResponse(Pojo response) {
+				System.out.println("结果id:" + response.getId() );
+				System.out.println("结果name:" + response.getName() );
 			}
-			
-		};
-		mQueue.add(new KGsonObjectRequest<MainActivity>(Method.GET, url, null, null, new Listener<MainActivity>() {
-			
+		}, null,Pojo.class));
+		mQueue.start();
+	}
+	public void text7() {
+		
+		String url = "http://market.konkacloud.cn/client/recommend?type=4";
+		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+	 
+		mQueue.add(new KGsonArrayRequest<Pojo>(Method.GET, url, null, null, new Listener<List<Pojo>>() {
+
 			@Override
-			public void onResponse(MainActivity response) {
-				// TODO Auto-generated method stub
-				
+			public void onResponse(List<Pojo> response) {
+				System.out.println("结果ming:" + response. get(0));
+				for(int i=0;i<response.size();i++){
+					System.out.println("结果ming:" + response. get(i).getName());
+					
+				}
 			}
-		}, null));
+		}, null,Pojo.class));
 		mQueue.start();
 	}
 }

@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.kubeiwu.commontool.khttp.NetworkResponse;
 import com.kubeiwu.commontool.khttp.Response;
 import com.kubeiwu.commontool.khttp.Response.ErrorListener;
@@ -14,16 +13,15 @@ import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
 
 public class KGsonObjectRequest<T> extends KGsonRequest<T> {
 
-	public KGsonObjectRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<T> listener, ErrorListener errorListener) {
-		super(method, url, headers, params, listener, errorListener);
+	public KGsonObjectRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<T> listener, ErrorListener errorListener, Class<? extends T> clazz) {
+		super(method, url, headers, params, listener, errorListener, clazz);
 	}
-	
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-			T t = gson.fromJson(json, new TypeToken<T>() {
-			}.getType());
+			@SuppressWarnings("unchecked")
+			T t = (T) gson.fromJson(json, clazz);
 			return Response.success(t, HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));
@@ -31,6 +29,5 @@ public class KGsonObjectRequest<T> extends KGsonRequest<T> {
 			return Response.error(new ParseError(e));
 		}
 	}
-
 
 }
