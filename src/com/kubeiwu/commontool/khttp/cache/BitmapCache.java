@@ -34,9 +34,12 @@ public class BitmapCache implements ImageCache {
 		Bitmap bitmap = mLruMemoryCachem.getBitmap(urlkey);
 		if (bitmap == null) {
 			bitmap = mDiskLruImageCache.getBitmap(urlkey);
+			System.out.println("来自SD卡");
 			if (bitmap != null && !bitmap.isRecycled()) {
 				mLruMemoryCachem.putBitmap(urlkey, bitmap);
 			}
+		}else{
+			System.out.println("来自内存");
 		}
 		return bitmap;
 	}

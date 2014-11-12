@@ -8,10 +8,13 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kubeiwu.commontool.demo.ListViewFragment;
 import com.kubeiwu.commontool.khttp.DefaultRetryPolicy;
 import com.kubeiwu.commontool.khttp.Request.Method;
 import com.kubeiwu.commontool.khttp.RequestQueue;
@@ -26,14 +29,15 @@ import com.kubeiwu.commontool.khttp.requestimpl.StringRequest;
 import com.kubeiwu.commontool.khttp.toolbox.Volley;
 import com.kubeiwu.commontool.khttp.toolbox.notused.RequestFuture;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 	public static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		text6();
+//		setContentView(R.layout.activity_main);
+//		text6();
+		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new ListViewFragment()).commit();
 	}
 
 	@Override
