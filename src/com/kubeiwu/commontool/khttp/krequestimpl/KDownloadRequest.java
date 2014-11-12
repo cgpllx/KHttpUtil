@@ -1,74 +1,42 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.kubeiwu.commontool.khttp.krequestimpl;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
-import android.os.RecoverySystem.ProgressListener;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.text.TextUtils;
 
 import com.kubeiwu.commontool.khttp.NetworkResponse;
-import com.kubeiwu.commontool.khttp.Request;
-import com.kubeiwu.commontool.khttp.Request.Method;
 import com.kubeiwu.commontool.khttp.Response;
 import com.kubeiwu.commontool.khttp.Response.ErrorListener;
 import com.kubeiwu.commontool.khttp.Response.Listener;
+import com.kubeiwu.commontool.khttp.exception.ParseError;
 import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
 
 /**
  * A canned request for retrieving the response body at a given URL as a String.
  */
-public class KDownloadRequest extends Request<String> {
-	private final Listener<String> mListener;
+public class KDownloadRequest extends KRequest<String> {
 	private final String mDownloadPath;
-	private ProgressListener mProgressListener;
 
 	/**
-	 * Creates a new request with the given method.
+	 * 下载请求
 	 * 
-	 * @param method
-	 *            the request {@link Method} to use
 	 * @param url
-	 *            URL to fetch the string at
-	 * @param download_apth
-	 *            path to save the file to
+	 *            地址
+	 * @param download_path
+	 *            文件保存地址
 	 * @param listener
-	 *            Listener to receive the String response
 	 * @param errorListener
-	 *            Error listener, or null to ignore errors
 	 */
-	public KDownloadRequest(String url, String download_path, Listener<String> listener, ErrorListener errorListener) {
-		super(Method.GET, url, errorListener);
+	public KDownloadRequest(int method, String url, String download_path, Map<String, String> headers, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
+		super(method, url, headers, params, listener, errorListener);
 		mDownloadPath = download_path;
-		mListener = listener;
-	}
-
-	public void setOnProgressListener(ProgressListener listener) {
-		mProgressListener = listener;
-	}
-
-	@Override
-	protected void deliverResponse(String response) {
-		if (null != mListener) {
-			mListener.onResponse(response);
-		}
 	}
 
 	@Override
@@ -82,23 +50,17 @@ public class KDownloadRequest extends Request<String> {
 			fileOuputStream.close();
 			parsed = mDownloadPath;
 		} catch (UnsupportedEncodingException e) {
-			parsed = new String(response.data);
+			return Response.error(new ParseError(e));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			return Response.error(new ParseError(e));
 		} catch (IOException e) {
-			e.printStackTrace();
+			return Response.error(new ParseError(e));
 		} finally {
 			if (TextUtils.isEmpty(parsed)) {
 				parsed = "";
 			}
 		}
-
+		// 返回的是文件路径
 		return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
-	}
-
-	public void onProgress(int progress) {
-		if (null != mProgressListener) {
-			mProgressListener.onProgress(progress);
-		}
 	}
 }
