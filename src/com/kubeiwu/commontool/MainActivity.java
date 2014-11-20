@@ -22,6 +22,7 @@ import com.kubeiwu.commontool.khttp.Response.ErrorListener;
 import com.kubeiwu.commontool.khttp.Response.Listener;
 import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
 import com.kubeiwu.commontool.khttp.exception.VolleyError;
+import com.kubeiwu.commontool.khttp.krequestimpl.KGZipRequest;
 import com.kubeiwu.commontool.khttp.krequestimpl.KGsonArrayRequest;
 import com.kubeiwu.commontool.khttp.krequestimpl.KGsonObjectRequest;
 import com.kubeiwu.commontool.khttp.requestimpl.JsonObjectRequest;
@@ -35,9 +36,10 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);
 //		text6();
-		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new ListViewFragment()).commit();
+//		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new ListViewFragment()).commit();
+		ziptext1();
 	}
 
 	@Override
@@ -112,6 +114,27 @@ public class MainActivity extends FragmentActivity {
 			}
 		});
 		mQueue.start();
+	}
+//	KGZipRequest
+//	StringRequest
+	public void ziptext1(){
+		String url="http://www.hao123.com";
+//		String url="http://video.konkacloud.cn/client/userVideoCount";
+		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		mQueue.add(new KGZipRequest(Method.GET,url, new Listener<String>() {
+
+			@Override
+			public void onResponse(String response) {
+				System.out.println("结果"+response);
+			}
+		},new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				System.out.println(error );
+			}
+		}));
+		
 	}
 
 	public void text4() {
