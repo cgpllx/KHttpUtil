@@ -6,15 +6,12 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.kubeiwu.commontool.demo.ListViewFragment;
 import com.kubeiwu.commontool.khttp.DefaultRetryPolicy;
 import com.kubeiwu.commontool.khttp.Request.Method;
 import com.kubeiwu.commontool.khttp.RequestQueue;
@@ -27,7 +24,7 @@ import com.kubeiwu.commontool.khttp.krequestimpl.KGsonArrayRequest;
 import com.kubeiwu.commontool.khttp.krequestimpl.KGsonObjectRequest;
 import com.kubeiwu.commontool.khttp.requestimpl.JsonObjectRequest;
 import com.kubeiwu.commontool.khttp.requestimpl.StringRequest;
-import com.kubeiwu.commontool.khttp.toolbox.Volley;
+import com.kubeiwu.commontool.khttp.toolbox.KHttpUtil;
 import com.kubeiwu.commontool.khttp.toolbox.notused.RequestFuture;
 
 public class MainActivity extends FragmentActivity {
@@ -63,7 +60,7 @@ public class MainActivity extends FragmentActivity {
 
 	public void text1() {
 		String url = "url";
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
 		mQueue.add(new JsonObjectRequest(Method.GET, url, null, new Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -76,7 +73,7 @@ public class MainActivity extends FragmentActivity {
 	public void text2() {
 		// String url="http://video.konka2cloud.cn/client/GetTV";
 		String url = "http://www.google.com";
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
 		mQueue.add(new StringRequest(url, new Listener<String>() {
 			@Override
 			public void onResponse(String response) {
@@ -93,7 +90,7 @@ public class MainActivity extends FragmentActivity {
 		// String url="http://video.konka2cloud.cn/client/GetTV";
 		String url = "http://video.konkacloud.cn/account/account/login";
 	
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
 		ErrorListener lin = new ErrorListener() {
 
 			@Override
@@ -120,7 +117,7 @@ public class MainActivity extends FragmentActivity {
 	public void ziptext1(){
 		String url="http://www.hao123.com";
 //		String url="http://video.konkacloud.cn/client/userVideoCount";
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
 		mQueue.add(new KGZipRequest(Method.GET,url, new Listener<String>() {
 
 			@Override
@@ -145,7 +142,7 @@ public class MainActivity extends FragmentActivity {
 		JSONObject jsonObject=new JSONObject(map);
 		
 		String url = "http://video.konkacloud.cn/account/account/login";
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
 		ErrorListener lin = new ErrorListener() {
 
 			@Override
@@ -162,36 +159,36 @@ public class MainActivity extends FragmentActivity {
 		}, lin));
 		mQueue.start();
 	}
-	public void text5() {
-		final HashMap<String, String> map = new HashMap<String, String>();
-		map.put("AccountLogin[username]", "echo");
-		map.put("AccountLogin[password]", "123456");
-		// String url="http://video.konka2cloud.cn/client/GetTV";
-		JSONObject jsonObject=new JSONObject(map);
-		RequestFuture<JSONObject> requestFuture=RequestFuture.newFuture();
-		String url = "http://video.konkacloud.cn/account/account/login";
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
-		ErrorListener lin = new ErrorListener() {
-			
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				System.out.println("结果:" + error.toString());
-			}
-			
-		};
-//		mQueue.add(new KGsonObjectRequest<MainActivity>(Method.GET, url, null, null, new Listener<MainActivity>() {
-//
+//	public void text5() {
+//		final HashMap<String, String> map = new HashMap<String, String>();
+//		map.put("AccountLogin[username]", "echo");
+//		map.put("AccountLogin[password]", "123456");
+//		// String url="http://video.konka2cloud.cn/client/GetTV";
+//		JSONObject jsonObject=new JSONObject(map);
+//		RequestFuture<JSONObject> requestFuture=RequestFuture.newFuture();
+//		String url = "http://video.konkacloud.cn/account/account/login";
+//		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+//		ErrorListener lin = new ErrorListener() {
+//			
 //			@Override
-//			public void onResponse(MainActivity response) {
-//				// TODO Auto-generated method stub
-//				
+//			public void onErrorResponse(VolleyError error) {
+//				System.out.println("结果:" + error.toString());
 //			}
-//		}, null));
-		mQueue.start();
-	}
+//			
+//		};
+////		mQueue.add(new KGsonObjectRequest<MainActivity>(Method.GET, url, null, null, new Listener<MainActivity>() {
+////
+////			@Override
+////			public void onResponse(MainActivity response) {
+////				// TODO Auto-generated method stub
+////				
+////			}
+////		}, null));
+//		mQueue.start();
+//	}
 	public void text6() {
 		String url = "http://market.konkacloud.cn/client/search1?id=22555";
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
 		mQueue.add(new KGsonObjectRequest<Pojo>(Method.GET, url, null, null, new Listener<Pojo>() {
 			
 			@Override
@@ -205,7 +202,7 @@ public class MainActivity extends FragmentActivity {
 	public void text7() {
 		
 		String url = "http://market.konkacloud.cn/client/recommend?type=4";
-		RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
 	 
 		mQueue.add(new KGsonArrayRequest<Pojo>(Method.GET, url, null, null, new Listener<List<Pojo>>() {
 

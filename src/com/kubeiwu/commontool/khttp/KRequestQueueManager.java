@@ -3,7 +3,7 @@ package com.kubeiwu.commontool.khttp;
 
 import android.content.Context;
 
-import com.kubeiwu.commontool.khttp.toolbox.Volley;
+import com.kubeiwu.commontool.khttp.toolbox.KHttpUtil;
 
 /**
  * @author  cgpllx1@qq.com (www.kubeiwu.com)
@@ -26,7 +26,7 @@ public class KRequestQueueManager {
 	}
 
 	public void init(Context context) {
-		mQueue = Volley.newRequestQueue(context);
+		mQueue = KHttpUtil.newRequestQueue(context);
 		mImageLoaderManager = new ImageLoaderManager(context,mQueue);
 	}
 

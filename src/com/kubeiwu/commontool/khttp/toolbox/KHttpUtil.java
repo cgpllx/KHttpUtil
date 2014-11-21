@@ -28,7 +28,7 @@ import com.kubeiwu.commontool.khttp.RequestQueue;
 import com.kubeiwu.commontool.khttp.cache.DiskBasedCache;
 import com.kubeiwu.commontool.khttp.superinterface.Network;
 
-public class Volley {
+public class KHttpUtil {
 
 	/** Default on-disk cache directory. */
 	private static final String DEFAULT_CACHE_DIR = "volley";
