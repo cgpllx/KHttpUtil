@@ -31,7 +31,8 @@ import com.kubeiwu.commontool.khttp.superinterface.Network;
 public class KHttpUtil {
 
 	/** Default on-disk cache directory. */
-	private static final String DEFAULT_CACHE_DIR = "volley";
+	private static final String DEFAULT_CACHE_DIR = "khttpUtil";
+//	private static final String DEFAULT_CACHE_DIR = "volley";
 
 	/**
 	 * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
