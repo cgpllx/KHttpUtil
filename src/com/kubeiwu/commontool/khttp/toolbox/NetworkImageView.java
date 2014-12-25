@@ -41,7 +41,7 @@ public class NetworkImageView extends ImageView {
     /**  
      * Resource ID of the image to be used if the network response fails.
      */
-    private int mErrorImageId;
+    private int mErrorImageId; 
 
     /** Local copy of the ImageLoader. */
     private ImageLoader mImageLoader;
