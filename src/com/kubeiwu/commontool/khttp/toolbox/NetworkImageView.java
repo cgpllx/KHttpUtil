@@ -38,7 +38,7 @@ public class NetworkImageView extends ImageView {
      */
     private int mDefaultImageId;
 
-    /**
+    /**  
      * Resource ID of the image to be used if the network response fails.
      */
     private int mErrorImageId;
