@@ -32,11 +32,10 @@ public class HttpHeaderParser {
 
 	/**
 	 * 获取缓存entry Extracts a {@link Cache.Entry} from a {@link NetworkResponse}.
-	 *
+	 * 
 	 * @param response
 	 *            The network response to parse headers from
-	 * @return a cache entry for the given response, or null if the response is
-	 *         not cacheable.
+	 * @return a cache entry for the given response, or null if the response is not cacheable.
 	 */
 	public static Cache.Entry parseCacheHeaders(NetworkResponse response) {
 		long now = System.currentTimeMillis();
@@ -56,7 +55,6 @@ public class HttpHeaderParser {
 		if (headerValue != null) {
 			serverDate = parseDateAsEpoch(headerValue);
 		}
-
 		headerValue = headers.get("Cache-Control");
 		if (headerValue != null) {
 			hasCacheControl = true;
@@ -95,7 +93,7 @@ public class HttpHeaderParser {
 		} else {
 			softExpire = now + Cache.Entry.DEFAULT_CACHE_DURATION;
 		}
-
+		System.out.println("缓存时间" + softExpire);
 		Cache.Entry entry = new Cache.Entry();
 		entry.data = response.data;
 		entry.etag = serverEtag;
@@ -121,8 +119,7 @@ public class HttpHeaderParser {
 	}
 
 	/**
-	 * Returns the charset specified in the Content-Type of this header, or the
-	 * HTTP default (ISO-8859-1) if none can be found.
+	 * Returns the charset specified in the Content-Type of this header, or the HTTP default (ISO-8859-1) if none can be found.
 	 */
 	public static String parseCharset(Map<String, String> headers) {
 		String contentType = headers.get(HTTP.CONTENT_TYPE);

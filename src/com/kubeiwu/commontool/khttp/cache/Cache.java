@@ -78,7 +78,7 @@ public interface Cache {
 		/**
 		 * 默认缓存毫秒数
 		 */
-		public static final int DEFAULT_CACHE_DURATION = 10 * 60 * 1000;// 10分钟
+		public static final int DEFAULT_CACHE_DURATION  = 10 * 60 * 1000;// 10分钟
 		/** The data returned from cache. */
 		public byte[] data;
 
