@@ -546,4 +546,9 @@ public class DiskBasedCache implements Cache {
 		return result;
 	}
 
+	@Override
+	public long getCacheSize() {
+		return mTotalSize;
+	}
+
 }

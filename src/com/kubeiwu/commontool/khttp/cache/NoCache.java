@@ -45,4 +45,9 @@ public class NoCache implements Cache {
     @Override
     public void initialize() {
     }
+
+	@Override
+	public long getCacheSize() {
+		return 0;
+	}
 }

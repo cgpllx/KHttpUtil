@@ -70,6 +70,8 @@ public interface Cache {
 	 * Empties the cache.
 	 */
 	public void clear();
+	
+	public long getCacheSize();
 
 	/**
 	 * Data and metadata for an entry returned by the cache.
