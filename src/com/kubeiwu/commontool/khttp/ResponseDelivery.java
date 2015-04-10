@@ -39,4 +39,21 @@ public interface ResponseDelivery {
 	 * Posts an error for the given request.
 	 */
 	public void postError(Request<?> request, VolleyError error);
+
+	/**
+	 * 当前线程执行
+	 * 
+	 * @param request
+	 * @param error
+	 */
+	public void postCurrentError(Request<?> request, VolleyError error);
+
+	/**
+	 * 当前线程执行
+	 * 
+	 * @param request
+	 * @param response
+	 * @param runnable
+	 */
+	public void postCurrentResponse(Request<?> request, Response<?> response, Runnable runnable);
 }

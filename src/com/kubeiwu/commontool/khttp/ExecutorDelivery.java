@@ -75,6 +75,26 @@ public class ExecutorDelivery implements ResponseDelivery {
 	}
 
 	/**
+	 * 让他在当线程执行
+	 */
+	@Override
+	public void postCurrentError(Request<?> request, VolleyError error) {
+		request.addMarker("post-error");
+		Response<?> response = Response.error(error);
+		new ResponseDeliveryRunnable(request, response, null).run();
+	}
+
+	/**
+	 * 让他在当线程执行
+	 */
+	@Override
+	public void postCurrentResponse(Request<?> request, Response<?> response, Runnable runnable) {
+		request.markDelivered();
+		request.addMarker("post-response");
+		new ResponseDeliveryRunnable(request, response, runnable).run();
+	}
+
+	/**
 	 * A Runnable used for delivering network responses to a listener on the main thread.
 	 */
 	@SuppressWarnings("rawtypes")
@@ -119,4 +139,5 @@ public class ExecutorDelivery implements ResponseDelivery {
 			}
 		}
 	}
+
 }

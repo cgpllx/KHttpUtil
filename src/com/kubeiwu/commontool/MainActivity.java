@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -34,9 +35,16 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+         .detectDiskReads()
+         .detectDiskWrites()
+         .detectNetwork()   // or .detectAll() for all detectable problems
+         .penaltyLog()
+         .build());
 //		text6();
 //		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new ListViewFragment()).commit();
-		ziptext1();
+//		ziptext1();
+		text8();
 	}
 
 	@Override
@@ -216,5 +224,47 @@ public class MainActivity extends FragmentActivity {
 			}
 		}, null,Pojo.class));
 		mQueue.start();
+	}
+	
+	public void text8(){
+		String url = "http://market.konkacloud.cn/client/recommend?type=4";
+		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
+//		mQueue.add(new KGsonArrayRequest<Pojo>(Method.GET, url, null, null, new Listener<List<Pojo>>() {
+//			@Override
+//			public void onResponse(List<Pojo> response) {
+//				System.out.println("结果ming:" + response. get(0));
+//				for(int i=0;i<response.size();i++){
+//					System.out.println("结果ming:" + response. get(i).getName());
+//					
+//				}
+//			}
+//		}, null,Pojo.class));
+		
+		
+		System.out.println("结果ming:11111111111"  );
+		
+		System.out.println("结果ming333333333:" );
+		mQueue.currentThreadExecute(new KGsonArrayRequest<Pojo>(Method.GET, url, null, null, new Listener<List<Pojo>>() {
+			@Override
+			public void onResponse(List<Pojo> response) {
+				System.out.println("结果ming:" + response. get(0));
+				for(int i=0;i<response.size();i++){
+					System.out.println("结果ming:" + response. get(i).getName());
+					
+				}
+			}
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+			System.out.println("出错"+error.getMessage());
+				
+			}
+		},Pojo.class));
+		
+		mQueue.start();
+		
+		System.out.println("结果ming:555555555555555");
+		
 	}
 }

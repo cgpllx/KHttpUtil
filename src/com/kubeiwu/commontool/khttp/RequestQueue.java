@@ -97,6 +97,8 @@ public class RequestQueue {// 一般是单列的
 		mCache = cache;
 		mNetwork = network;
 		mDispatchers = new NetworkDispatcher[threadPoolSize];
+		currentNetworkDispatcher = new CurrentNetworkDispatcher(network, cache, delivery);// 所以初始化
+		currentCacheDispatcher = new CurrentCacheDispatcher(currentNetworkDispatcher, cache, delivery);
 		mDelivery = delivery;
 	}
 
@@ -234,13 +236,13 @@ public class RequestQueue {// 一般是单列的
 		}
 
 		// Insert request into stage if there's already a request with the same cache key in flight.
-		synchronized (mWaitingRequests) {//mWaitingRequests 是一个map集合，key就是缓存的key，value是Queue<Request
-			String cacheKey = request.getCacheKey();//这里返回的key是url
-			if (mWaitingRequests.containsKey(cacheKey)) {//已经有请求在排队了，把他加在请求的后面
+		synchronized (mWaitingRequests) {// mWaitingRequests 是一个map集合，key就是缓存的key，value是Queue<Request
+			String cacheKey = request.getCacheKey();// 这里返回的key是url
+			if (mWaitingRequests.containsKey(cacheKey)) {// 已经有请求在排队了，把他加在请求的后面
 				// There is already a request in flight. Queue up.
 				Queue<Request> stagedRequests = mWaitingRequests.get(cacheKey);
 				if (stagedRequests == null) {
-					stagedRequests = new LinkedList<Request>();//LinkedList是Queue的子类
+					stagedRequests = new LinkedList<Request>();// LinkedList是Queue的子类
 				}
 				stagedRequests.add(request);
 				mWaitingRequests.put(cacheKey, stagedRequests);
@@ -250,7 +252,7 @@ public class RequestQueue {// 一般是单列的
 			} else {
 				// Insert 'null' queue for this cacheKey, indicating there is now a request in
 				// flight.
-				//这个请求没有请求过，就添到加去请求(先到mCacheQueue中，mCacheQueue如果没有就添加到网络请求)
+				// 这个请求没有请求过，就添到加去请求(先到mCacheQueue中，mCacheQueue如果没有就添加到网络请求)
 				mWaitingRequests.put(cacheKey, null);
 				mCacheQueue.add(request);
 			}
@@ -258,9 +260,54 @@ public class RequestQueue {// 一般是单列的
 		}
 	}
 
+	private CurrentNetworkDispatcher currentNetworkDispatcher;
+	private CurrentCacheDispatcher currentCacheDispatcher;
+
+	public Request currentThreadExecute(Request request) {
+		// TODO 当前线程执行
+		request.setRequestQueue(this);
+		// 安全增加
+		synchronized (mCurrentRequests) {
+			mCurrentRequests.add(request);
+		}
+		// Process requests in the order they are added.
+		request.setSequence(getSequenceNumber());// 设置序号
+		request.addMarker("add-to-queue");
+		// If the request is uncacheable, skip the cache queue and go straight to the network.
+		if (!request.shouldCache()) {// 如果不需要缓存就直接加到网络请求队列中
+			// mNetworkQueue.add(request);
+			currentNetworkDispatcher.execute(request);
+			return request;
+		}
+
+		// Insert request into stage if there's already a request with the same cache key in flight.
+		synchronized (mWaitingRequests) {// mWaitingRequests 是一个map集合，key就是缓存的key，value是Queue<Request
+			String cacheKey = request.getCacheKey();// 这里返回的key是url
+			if (mWaitingRequests.containsKey(cacheKey)) {// 已经有请求在排队了，把他加在请求的后面
+				// There is already a request in flight. Queue up.
+				Queue<Request> stagedRequests = mWaitingRequests.get(cacheKey);
+				if (stagedRequests == null) {
+					stagedRequests = new LinkedList<Request>();// LinkedList是Queue的子类
+				}
+				stagedRequests.add(request);
+				mWaitingRequests.put(cacheKey, stagedRequests);
+				if (VolleyLog.DEBUG) {
+					VolleyLog.v("Request for cacheKey=%s is in flight, putting on hold.", cacheKey);
+				}
+			} else {
+				// Insert 'null' queue for this cacheKey, indicating there is now a request in
+				// flight.
+				// 这个请求没有请求过，就添到加去请求(先到mCacheQueue中，mCacheQueue如果没有就添加到网络请求)
+				mWaitingRequests.put(cacheKey, null);
+				// mCacheQueue.add(request);
+				currentCacheDispatcher.execute(request);
+			}
+			return request;
+		}
+	}
+
 	/**
 	 * Called from {@link Request#finish(String)}, indicating that processing of the given request has finished.
-	 * 
 	 * <p>
 	 * Releases waiting requests for <code>request.getCacheKey()</code> if <code>request.shouldCache()</code>.
 	 * </p>
