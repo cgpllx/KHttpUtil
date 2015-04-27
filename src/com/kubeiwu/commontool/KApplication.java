@@ -29,6 +29,6 @@ public class KApplication extends Application {
 	}
 	public void initImageLoder(Context context) {
 		KRequestQueueManager.getInstance().init(context);
-
+		KRequestQueueManager.getRequestQueue().start();
 	}
 }

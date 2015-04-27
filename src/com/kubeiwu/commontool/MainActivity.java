@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kubeiwu.commontool.demo.ListViewFragment;
 import com.kubeiwu.commontool.khttp.DefaultRetryPolicy;
 import com.kubeiwu.commontool.khttp.Request.Method;
 import com.kubeiwu.commontool.khttp.RequestQueue;
@@ -26,7 +27,6 @@ import com.kubeiwu.commontool.khttp.krequestimpl.KGsonObjectRequest;
 import com.kubeiwu.commontool.khttp.requestimpl.JsonObjectRequest;
 import com.kubeiwu.commontool.khttp.requestimpl.StringRequest;
 import com.kubeiwu.commontool.khttp.toolbox.KHttpUtil;
-import com.kubeiwu.commontool.khttp.toolbox.notused.RequestFuture;
 
 public class MainActivity extends FragmentActivity {
 	public static final String TAG = "MainActivity";
@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity {
 //		ziptext1();
 		text8();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
