@@ -74,7 +74,7 @@ public class CurrentNetworkDispatcher {
 	// @SuppressLint("NewApi")
 	// @Override
 	@SuppressLint("NewApi")
-	public <T> Response<T> execute(Request<T> mRequest) {
+	public <T> T execute(Request<T> mRequest) {
 		Request<T> request;
 		request = mRequest;
 		try {
@@ -131,7 +131,7 @@ public class CurrentNetworkDispatcher {
 		return null;
 	}
 
-	public <T> Response<T> completion(Request<T> request, Response<T> response) {
+	public <T> T completion(Request<T> request, Response<T> response) {
 		// If this request has canceled, finish it and don't deliver.
 		if (request.isCanceled()) {
 			request.finish("canceled-at-delivery");
@@ -152,7 +152,10 @@ public class CurrentNetworkDispatcher {
 		} else {
 			request.finish("done");
 		}
-		return response;
+		if(response.isSuccess()){
+			return response.result;
+		}
+		return null;
 	}
 
 //	private void parseAndDeliverNetworkError(Request<?> request, VolleyError error) {

@@ -263,7 +263,7 @@ public class RequestQueue {// 一般是单列的
 	private CurrentNetworkDispatcher currentNetworkDispatcher;
 	private CurrentCacheDispatcher currentCacheDispatcher;
 
-	public <T> Response<T> currentThreadExecute(Request<T> request) {
+	public <T> T currentThreadExecute(Request<T> request) {
 		// TODO 当前线程执行
 		request.setRequestQueue(this);
 		// 安全增加

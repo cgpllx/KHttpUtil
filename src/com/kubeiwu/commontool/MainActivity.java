@@ -283,14 +283,14 @@ public class MainActivity extends FragmentActivity {
 		System.out.println("结果ming:11111111111");
 
 		System.out.println("结果ming333333333:");
-		Response<String> res = mQueue.currentThreadExecute(new KStringRequest(url, null));
+//		Response<String> res = mQueue.currentThreadExecute(new KStringRequest(url, null));
 		// res.success(result, cacheEntry);
 		// res.isSuccess()
-		String s = res.result;
+//		String s = res.result;
 		// Response<List<Pojo>> res=mQueue.currentThreadExecute(new KGsonArrayRequest<Pojo>(Method.GET, url, null, null, null,null, Pojo.class));
 
 		// mQueue.start();
-		System.out.println(s);
+//		System.out.println(s);
 		System.out.println("结果ming:555555555555555");
 	}
 
@@ -314,11 +314,11 @@ public class MainActivity extends FragmentActivity {
 //		Response<String> res = mQueue.currentThreadExecute(new KStringRequest(url, null));
 		// res.success(result, cacheEntry);
 		// res.isSuccess()
-		Response<List<Pojo>> res = mQueue.currentThreadExecute(new KGsonRequest<List<Pojo>>(url));
-		List<Pojo> s = res.result;
+		 List<Pojo>  res = mQueue.currentThreadExecute(new KGsonRequest<List<Pojo>>(url));
+//		List<Pojo> s = res.result;
 
 		// mQueue.start();
-		System.out.println(s);
+		System.out.println(res);
 		System.out.println("结果ming:555555555555555");
 	}
 }
