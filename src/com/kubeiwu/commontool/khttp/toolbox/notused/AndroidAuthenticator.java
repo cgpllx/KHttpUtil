@@ -72,6 +72,7 @@ public class AndroidAuthenticator implements Authenticator {
         final AccountManager accountManager = AccountManager.get(mContext);
         AccountManagerFuture<Bundle> future = accountManager.getAuthToken(mAccount,
                 mAuthTokenType, mNotifyAuthFailure, null, null);
+//        accountManager.getAuthToken(mAccount, mAuthTokenType, null, mNotifyAuthFailure, null, null);
         Bundle result;
         try {
             result = future.getResult();
