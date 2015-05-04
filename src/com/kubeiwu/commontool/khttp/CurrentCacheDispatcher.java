@@ -42,7 +42,7 @@ public class CurrentCacheDispatcher {
 	private final Cache mCache;
 
 	/** For posting responses. */
-	private final ResponseDelivery mDelivery;
+	// private final ResponseDelivery mDelivery;
 
 	/** Used for telling us to die. */
 	private volatile boolean mQuit = false;
@@ -61,11 +61,11 @@ public class CurrentCacheDispatcher {
 	 * @param delivery
 	 *            Delivery interface to use for posting responses
 	 */
-	public CurrentCacheDispatcher(CurrentNetworkDispatcher currentNetworkDispatcher, Cache cache, ResponseDelivery delivery) {
+	public CurrentCacheDispatcher(CurrentNetworkDispatcher currentNetworkDispatcher, Cache cache) {
 		// mCacheQueue = cacheQueue;
 		// mNetworkQueue = networkQueue;
 		mCache = cache;
-		mDelivery = delivery;
+		// mDelivery = delivery;
 		mCurrentNetworkDispatcher = currentNetworkDispatcher;
 	}
 
@@ -78,7 +78,7 @@ public class CurrentCacheDispatcher {
 	}
 
 	// @Override
-	public void execute(Request mRequest) {
+	public <T> Response<T> execute(Request<T> mRequest) {
 		if (DEBUG)
 			VolleyLog.v("当前线程中的缓存 ");
 
@@ -88,13 +88,13 @@ public class CurrentCacheDispatcher {
 		try {
 			// Get a request from the cache triage queue, blocking until
 			// at least one is available.
-			final Request request = mRequest;
+			final Request<T> request = mRequest;
 			request.addMarker("cache-queue-take");
 
 			// If the request has been canceled, don't bother dispatching it.
 			if (request.isCanceled()) {
 				request.finish("cache-discard-canceled");
-				return;
+				return null;
 			}
 			// CurrentNetworkDispatcher currentNetworkDispatcher;
 			// Attempt to retrieve this item from cache.
@@ -104,8 +104,8 @@ public class CurrentCacheDispatcher {
 				// Cache miss; send off to the network dispatcher.
 				// mNetworkQueue.put(request);
 				// currentNetworkDispatcher = new CurrentNetworkDispatcher(network, cache, delivery);
-				mCurrentNetworkDispatcher.execute(request);
-				return;
+				return mCurrentNetworkDispatcher.execute(request);
+				// return null;
 			}
 			// If it is completely expired, just send it to the network.
 			if (entry.isExpired()) {// 如果缓存的时间过期了，同上处理
@@ -113,19 +113,21 @@ public class CurrentCacheDispatcher {
 				request.setCacheEntry(entry);// entry中可能有 请求头等信息，所以要放进去给request去使用
 				// mNetworkQueue.put(request);
 				System.out.println(request.isCanceled());
-				mCurrentNetworkDispatcher.execute(request);
-				return;
+				return mCurrentNetworkDispatcher.execute(request);
+				// return null;
 			}
 
 			// We have a cache hit; parse its data for delivery back to the request.
 			request.addMarker("cache-hit");
-			Response<?> response = request.parseNetworkResponse(// 有缓存，将他传回去
+			Response<T> response = request.parseNetworkResponse(// 有缓存，将他传回去
 					new NetworkResponse(entry.data, entry.responseHeaders));
 			request.addMarker("cache-hit-parsed");
 
 			if (!entry.refreshNeeded()) {// 软引用没有到期（ 不明白）
 				// Completely unexpired cache hit. Just deliver the response.
-				mDelivery.postCurrentResponse(request, response, null);
+				// mDelivery.postCurrentResponse(request, response, null);
+
+				return completion(request, response);
 			} else {
 				// Soft-expired cache hit. We can deliver the cached response,
 				// but we need to also send the request to the network for
@@ -138,25 +140,59 @@ public class CurrentCacheDispatcher {
 
 				// Post the intermediate response back to the user and have
 				// the delivery then forward the request along to the network.
-				mDelivery.postCurrentResponse(request, response, new Runnable() {
-					@Override
-					public void run() {
-						try {
-							// mNetworkQueue.put(request);
-							mCurrentNetworkDispatcher.execute(request);
-						} catch (Exception e) {
-							// Not much we can do about this.
-						}
-					}
-				});
+
+				// mDelivery.postCurrentResponse(request, response, new Runnable() {
+				// @Override
+				// public void run() {
+				// try {
+				// // mNetworkQueue.put(request);
+				// mCurrentNetworkDispatcher.execute(request);
+				// } catch (Exception e) {
+				// // Not much we can do about this.
+				// }
+				// }
+				// });
+				return mCurrentNetworkDispatcher.execute(request);
 			}
 
 		} catch (Exception e) {
 			// We may have been interrupted because it was time to quit.
 			if (mQuit) {
-				return;
+				return null;
 			}
-			return;
+			return null;
 		}
+	}
+
+	/**
+	 * 这个方法要抽取
+	 * 
+	 * @param <T>
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public <T> Response<T> completion(Request<T> request, Response<T> response) {
+		// If this request has canceled, finish it and don't deliver.
+		if (request.isCanceled()) {
+			request.finish("canceled-at-delivery");
+			return null;
+		}
+
+		// Deliver a normal response or error, depending.
+		// if (response.isSuccess()) {
+		// request.deliverResponse(response.result);
+		// } else {
+		// request.deliverError(response.error);
+		// }
+
+		// If this is an intermediate response, add a marker, otherwise we're done
+		// and the request can be finished.
+		if (response.intermediate) {
+			request.addMarker("intermediate-response");
+		} else {
+			request.finish("done");
+		}
+		return response;
 	}
 }

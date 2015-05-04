@@ -14,24 +14,45 @@ import com.kubeiwu.commontool.khttp.exception.ParseError;
 import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
 
 public class KJsonObjectRequest extends KRequest<JSONObject> {
-	/**
-	 * 构造
-	 * 
-	 * @param method
-	 *            请求方式
-	 * @param url
-	 *            地址
-	 * @param headers
-	 *            请求头信息
-	 * @param params
-	 *            请求参数
-	 * @param listener
-	 *            正确响应监听
-	 * @param errorListener
-	 *            错误响应监听
-	 */
+
 	public KJsonObjectRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<JSONObject> listener, ErrorListener errorListener) {
 		super(method, url, headers, params, listener, errorListener);
+	}
+
+	public KJsonObjectRequest(int method, String url, Listener<JSONObject> listener) {
+		super(method, url, listener);
+	}
+
+	public KJsonObjectRequest(int method, String url, Map<String, String> params, Listener<JSONObject> listener, ErrorListener errorListener) {
+		super(method, url, params, listener, errorListener);
+	}
+
+	public KJsonObjectRequest(int method, String url, Map<String, String> params, Listener<JSONObject> listener) {
+		super(method, url, params, listener);
+	}
+
+	public KJsonObjectRequest(int method, String url, Map<String, String> params) {
+		super(method, url, params);
+	}
+
+	public KJsonObjectRequest(String url, Listener<JSONObject> listener, ErrorListener errorListener) {
+		super(url, listener, errorListener);
+	}
+
+	public KJsonObjectRequest(String url, Listener<JSONObject> listener) {
+		super(url, listener);
+	}
+
+	public KJsonObjectRequest(String url, Map<String, String> params, Listener<JSONObject> listener, ErrorListener errorListener) {
+		super(url, params, listener, errorListener);
+	}
+
+	public KJsonObjectRequest(String url, Map<String, String> headers, Map<String, String> params, Listener<JSONObject> listener, ErrorListener errorListener) {
+		super(url, headers, params, listener, errorListener);
+	}
+
+	public KJsonObjectRequest(String url) {
+		super(url);
 	}
 
 	@Override

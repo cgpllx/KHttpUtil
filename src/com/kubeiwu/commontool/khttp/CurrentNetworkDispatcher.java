@@ -32,7 +32,6 @@ import com.kubeiwu.commontool.khttp.superinterface.Network;
  * 
  * Requests added to the specified queue are processed from the network via a specified {@link Network} interface. Responses are committed to cache, if eligible, using a specified {@link Cache} interface. Valid responses and errors are posted back to the caller via a {@link ResponseDelivery}.
  */
-@SuppressWarnings("rawtypes")
 public class CurrentNetworkDispatcher {
 	/** The queue of requests to service. */
 	// private final BlockingQueue<Request> mQueue;
@@ -41,7 +40,7 @@ public class CurrentNetworkDispatcher {
 	/** The cache to write to. */
 	private final Cache mCache;
 	/** For posting responses and errors. */
-	private final ResponseDelivery mDelivery;
+//	private final ResponseDelivery mDelivery;
 	/** Used for telling us to die. */
 	private volatile boolean mQuit = false;
 
@@ -57,11 +56,11 @@ public class CurrentNetworkDispatcher {
 	 * @param delivery
 	 *            Delivery interface to use for posting responses
 	 */
-	public CurrentNetworkDispatcher(Network network, Cache cache, ResponseDelivery delivery) {
+	public CurrentNetworkDispatcher(Network network, Cache cache    ) {
 		// mQueue = queue;
 		mNetwork = network;
 		mCache = cache;
-		mDelivery = delivery;
+//		mDelivery = delivery;
 	}
 
 	/**
@@ -75,18 +74,21 @@ public class CurrentNetworkDispatcher {
 	// @SuppressLint("NewApi")
 	// @Override
 	@SuppressLint("NewApi")
-	public void execute(Request mRequest) {
-		Request request;
+	public <T> Response<T> execute(Request<T> mRequest) {
+		Request<T> request;
 		request = mRequest;
 		try {
 			System.out.println(request.isCanceled());
 			request.addMarker("current_network-queue-take");
 
+			if (mQuit) {
+				return null;
+			}
 			// If the request was cancelled already, do not perform the
 			// network request.
 			if (request.isCanceled()) {
 				request.finish("network-discard-cancelled");
-				return;
+				return null;
 			}
 
 			// Tag the request (if API >= 14)
@@ -102,11 +104,11 @@ public class CurrentNetworkDispatcher {
 			// we're done -- don't deliver a second identical response.
 			if (networkResponse.notModified && request.hasHadResponseDelivered()) {
 				request.finish("not-modified");
-				return;
+				return null;
 			}
 
 			// Parse the response here on the worker thread.
-			Response<?> response = request.parseNetworkResponse(networkResponse);
+			Response<T> response = request.parseNetworkResponse(networkResponse);
 			request.addMarker("network-parse-complete");
 			// Write to cache if applicable.
 			// TODO: Only update cache metadata instead of entire record for 304s.
@@ -117,17 +119,44 @@ public class CurrentNetworkDispatcher {
 
 			// Post the response back.
 			request.markDelivered();
-			mDelivery.postCurrentResponse(request, response,null);
+			// mDelivery.postCurrentResponse(request, response, null);
+			return completion(request, response);
 		} catch (VolleyError volleyError) {
-			parseAndDeliverNetworkError(request, volleyError);
+			VolleyLog.e(volleyError, null);
+			// parseAndDeliverNetworkError(request, volleyError);
 		} catch (Exception e) {
 			VolleyLog.e(e, "Unhandled exception %s", e.toString());
-			mDelivery.postError(request, new VolleyError(e));
+			// mDelivery.postError(request, new VolleyError(e));
 		}
+		return null;
 	}
 
-	private void parseAndDeliverNetworkError(Request<?> request, VolleyError error) {
-		error = request.parseNetworkError(error);
-		mDelivery.postError(request, error);
+	public <T> Response<T> completion(Request<T> request, Response<T> response) {
+		// If this request has canceled, finish it and don't deliver.
+		if (request.isCanceled()) {
+			request.finish("canceled-at-delivery");
+			return null;
+		}
+
+		// Deliver a normal response or error, depending.
+		// if (response.isSuccess()) {
+		// request.deliverResponse(response.result);
+		// } else {
+		// request.deliverError(response.error);
+		// }
+
+		// If this is an intermediate response, add a marker, otherwise we're done
+		// and the request can be finished.
+		if (response.intermediate) {
+			request.addMarker("intermediate-response");
+		} else {
+			request.finish("done");
+		}
+		return response;
 	}
+
+//	private void parseAndDeliverNetworkError(Request<?> request, VolleyError error) {
+//		error = request.parseNetworkError(error);
+//		mDelivery.postError(request, error);
+//	}
 }

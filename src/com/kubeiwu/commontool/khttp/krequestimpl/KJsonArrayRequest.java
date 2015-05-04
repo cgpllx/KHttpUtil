@@ -19,6 +19,43 @@ public class KJsonArrayRequest extends KRequest<JSONArray> {
 		super(method, url, headers, params, listener, errorListener);
 	}
 
+	public KJsonArrayRequest(int method, String url, Listener<JSONArray> listener) {
+		super(method, url, listener);
+
+	}
+
+	public KJsonArrayRequest(int method, String url, Map<String, String> params, Listener<JSONArray> listener, ErrorListener errorListener) {
+		super(method, url, params, listener, errorListener);
+	}
+
+	public KJsonArrayRequest(int method, String url, Map<String, String> params, Listener<JSONArray> listener) {
+		super(method, url, params, listener);
+	}
+
+	public KJsonArrayRequest(int method, String url, Map<String, String> params) {
+		super(method, url, params);
+	}
+
+	public KJsonArrayRequest(String url, Listener<JSONArray> listener, ErrorListener errorListener) {
+		super(url, listener, errorListener);
+	}
+
+	public KJsonArrayRequest(String url, Listener<JSONArray> listener) {
+		super(url, listener);
+	}
+
+	public KJsonArrayRequest(String url, Map<String, String> params, Listener<JSONArray> listener, ErrorListener errorListener) {
+		super(url, params, listener, errorListener);
+	}
+
+	public KJsonArrayRequest(String url, Map<String, String> headers, Map<String, String> params, Listener<JSONArray> listener, ErrorListener errorListener) {
+		super(url, headers, params, listener, errorListener);
+	}
+
+	public KJsonArrayRequest(String url) {
+		super(url);
+	}
+
 	@Override
 	protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
 		try {

@@ -48,20 +48,40 @@ public class KStringRequest extends KRequest<String> {
 		super(method, url, headers, params, listener, errorListener);
 	}
 
-	public KStringRequest(String url, Listener<String> listener) {
-		this(Method.GET, url, null, null, listener, null);
-	}
-
 	public KStringRequest(int method, String url, Listener<String> listener) {
-		this(method, url, null, null, listener, null);
-	}
-
-	public KStringRequest(int method, String url, Listener<String> listener, ErrorListener errorListener) {
-		this(method, url, null, null, listener, errorListener);
+		super(method, url, listener);
 	}
 
 	public KStringRequest(int method, String url, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
-		this(method, url, null, params, listener, errorListener);
+		super(method, url, params, listener, errorListener);
+	}
+
+	public KStringRequest(int method, String url, Map<String, String> params, Listener<String> listener) {
+		super(method, url, params, listener);
+	}
+
+	public KStringRequest(int method, String url, Map<String, String> params) {
+		super(method, url, params);
+	}
+
+	public KStringRequest(String url, Listener<String> listener, ErrorListener errorListener) {
+		super(url, listener, errorListener);
+	}
+
+	public KStringRequest(String url, Listener<String> listener) {
+		super(url, listener);
+	}
+
+	public KStringRequest(String url, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
+		super(url, params, listener, errorListener);
+	}
+
+	public KStringRequest(String url, Map<String, String> headers, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
+		super(url, headers, params, listener, errorListener);
+	}
+
+	public KStringRequest(String url) {
+		super(url);
 	}
 
 	@Override

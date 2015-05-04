@@ -97,8 +97,8 @@ public class RequestQueue {// 一般是单列的
 		mCache = cache;
 		mNetwork = network;
 		mDispatchers = new NetworkDispatcher[threadPoolSize];
-		currentNetworkDispatcher = new CurrentNetworkDispatcher(network, cache, delivery);// 所以初始化
-		currentCacheDispatcher = new CurrentCacheDispatcher(currentNetworkDispatcher, cache, delivery);
+		currentNetworkDispatcher = new CurrentNetworkDispatcher(network, cache  );// 所以初始化
+		currentCacheDispatcher = new CurrentCacheDispatcher(currentNetworkDispatcher, cache  );
 		mDelivery = delivery;
 	}
 
@@ -263,7 +263,7 @@ public class RequestQueue {// 一般是单列的
 	private CurrentNetworkDispatcher currentNetworkDispatcher;
 	private CurrentCacheDispatcher currentCacheDispatcher;
 
-	public Request currentThreadExecute(Request request) {
+	public <T> Response<T> currentThreadExecute(Request<T> request) {
 		// TODO 当前线程执行
 		request.setRequestQueue(this);
 		// 安全增加
@@ -276,8 +276,8 @@ public class RequestQueue {// 一般是单列的
 		// If the request is uncacheable, skip the cache queue and go straight to the network.
 		if (!request.shouldCache()) {// 如果不需要缓存就直接加到网络请求队列中
 			// mNetworkQueue.add(request);
-			currentNetworkDispatcher.execute(request);
-			return request;
+			return currentNetworkDispatcher.execute(request);
+//			return request;
 		}
 
 		// Insert request into stage if there's already a request with the same cache key in flight.
@@ -300,10 +300,11 @@ public class RequestQueue {// 一般是单列的
 				// 这个请求没有请求过，就添到加去请求(先到mCacheQueue中，mCacheQueue如果没有就添加到网络请求)
 				mWaitingRequests.put(cacheKey, null);
 				// mCacheQueue.add(request);
-				currentCacheDispatcher.execute(request);
+				return currentCacheDispatcher.execute(request);
 			}
-			return request;
+//			return request;
 		}
+		return null;
 	}
 
 	/**
