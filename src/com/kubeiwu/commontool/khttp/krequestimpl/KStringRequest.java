@@ -48,6 +48,14 @@ public class KStringRequest extends KRequest<String> {
 		super(method, url, headers, params, listener, errorListener);
 	}
 
+	public KStringRequest(int method, String url, Map<String, String> headers, Map<String, String> params) {
+		super(method, url, headers, params);
+	}
+
+	public KStringRequest(String url, Map<String, String> headers) {
+		super(url, headers);
+	}
+
 	public KStringRequest(int method, String url, Listener<String> listener) {
 		super(method, url, listener);
 	}

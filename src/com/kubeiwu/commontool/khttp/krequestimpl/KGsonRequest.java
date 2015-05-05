@@ -1,6 +1,5 @@
 package com.kubeiwu.commontool.khttp.krequestimpl;
 
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -25,6 +24,16 @@ public class KGsonRequest<T> extends KRequest<T> {
 	public KGsonRequest(int method, String url, Listener<T> listener) {
 		super(method, url, listener);
 	}
+
+	public KGsonRequest(int method, String url, Map<String, String> headers, Map<String, String> params) {
+		super(method, url, headers, params);
+	}
+
+
+	public KGsonRequest(String url, Map<String, String> headers) {
+		super(url, headers);
+	}
+
 
 	public KGsonRequest(int method, String url, Map<String, String> params, Listener<T> listener, ErrorListener errorListener) {
 		super(method, url, params, listener, errorListener);

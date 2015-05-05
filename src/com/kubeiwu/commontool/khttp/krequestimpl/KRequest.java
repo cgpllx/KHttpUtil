@@ -3,7 +3,6 @@ package com.kubeiwu.commontool.khttp.krequestimpl;
 import java.util.Map;
 
 import com.kubeiwu.commontool.khttp.Request;
-import com.kubeiwu.commontool.khttp.Request.Method;
 import com.kubeiwu.commontool.khttp.Response.ErrorListener;
 import com.kubeiwu.commontool.khttp.Response.Listener;
 import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
@@ -18,6 +17,7 @@ public abstract class KRequest<T> extends Request<T> {
 	private final Map<String, String> headers;
 	private final Map<String, String> params;
 	private final Listener<T> listener;
+
 	/**
 	 * 构造
 	 * 
@@ -52,8 +52,11 @@ public abstract class KRequest<T> extends Request<T> {
 		this(url, null, params, listener, errorListener);
 	}
 
-	public KRequest(String url, Listener<T> listener,//
-			ErrorListener errorListener) {
+	public KRequest(String url, Map<String, String> headers) {
+		this(Method.GET, url, headers, null, null, null);
+	}
+
+	public KRequest(String url, Listener<T> listener, ErrorListener errorListener) {
 		this(url, null, null, listener, errorListener);
 	}
 
@@ -84,6 +87,10 @@ public abstract class KRequest<T> extends Request<T> {
 
 	public KRequest(int method, String url, Map<String, String> params) {
 		this(method, url, null, params, null, null);
+	}
+
+	public KRequest(int method, String url, Map<String, String> headers, Map<String, String> params) {
+		this(method, url, headers, params, null, null);
 	}
 
 	// post----------------------------------------------------

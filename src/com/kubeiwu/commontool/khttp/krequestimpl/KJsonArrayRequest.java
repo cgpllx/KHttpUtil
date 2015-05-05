@@ -15,6 +15,14 @@ import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
 
 public class KJsonArrayRequest extends KRequest<JSONArray> {
 
+	public KJsonArrayRequest(int method, String url, Map<String, String> headers, Map<String, String> params) {
+		super(method, url, headers, params);
+	}
+
+	public KJsonArrayRequest(String url, Map<String, String> headers) {
+		super(url, headers);
+	}
+
 	public KJsonArrayRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<JSONArray> listener, ErrorListener errorListener) {
 		super(method, url, headers, params, listener, errorListener);
 	}

@@ -31,6 +31,14 @@ public class KJsonObjectRequest extends KRequest<JSONObject> {
 		super(method, url, params, listener);
 	}
 
+	public KJsonObjectRequest(int method, String url, Map<String, String> headers, Map<String, String> params) {
+		super(method, url, headers, params);
+	}
+
+	public KJsonObjectRequest(String url, Map<String, String> headers) {
+		super(url, headers);
+	}
+
 	public KJsonObjectRequest(int method, String url, Map<String, String> params) {
 		super(method, url, params);
 	}
