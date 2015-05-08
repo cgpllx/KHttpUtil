@@ -74,8 +74,10 @@ public class KGsonRequest<T> extends KRequest<T> {
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+				System.out.println("正真返回数据的字符串="+json);
 			T t = gson.fromJson(json, new TypeToken<T>() {
 			}.getType());
+			System.out.println("正真返回数据的字符串TTT==="+t);
 			return Response.success(t, HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));

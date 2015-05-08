@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.kubeiwu.commontool.khttp.DefaultRetryPolicy;
 import com.kubeiwu.commontool.khttp.Request.Method;
+import com.kubeiwu.commontool.khttp.KRequestQueueManager;
 import com.kubeiwu.commontool.khttp.RequestQueue;
 import com.kubeiwu.commontool.khttp.Response;
 import com.kubeiwu.commontool.khttp.Response.ErrorListener;
@@ -296,7 +297,7 @@ public class MainActivity extends FragmentActivity {
 
 	public void text10() {
 		String url = "http://market.konkacloud.cn/client/recommend?type=4";
-		RequestQueue mQueue = KHttpUtil.newRequestQueue(getApplicationContext());
+		RequestQueue mQueue = KRequestQueueManager.getRequestQueue();
 		// mQueue.add(new KGsonArrayRequest<Pojo>(Method.GET, url, null, null, new Listener<List<Pojo>>() {
 		// @Override
 		// public void onResponse(List<Pojo> response) {

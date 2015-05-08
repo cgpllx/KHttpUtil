@@ -40,7 +40,7 @@ public class CurrentNetworkDispatcher {
 	/** The cache to write to. */
 	private final Cache mCache;
 	/** For posting responses and errors. */
-//	private final ResponseDelivery mDelivery;
+	// private final ResponseDelivery mDelivery;
 	/** Used for telling us to die. */
 	private volatile boolean mQuit = false;
 
@@ -56,11 +56,11 @@ public class CurrentNetworkDispatcher {
 	 * @param delivery
 	 *            Delivery interface to use for posting responses
 	 */
-	public CurrentNetworkDispatcher(Network network, Cache cache    ) {
+	public CurrentNetworkDispatcher(Network network, Cache cache) {
 		// mQueue = queue;
 		mNetwork = network;
 		mCache = cache;
-//		mDelivery = delivery;
+		// mDelivery = delivery;
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class CurrentNetworkDispatcher {
 			// mDelivery.postCurrentResponse(request, response, null);
 			return completion(request, response);
 		} catch (VolleyError volleyError) {
-			VolleyLog.e(volleyError, null);
+			// VolleyLog.e(volleyError, null);
 			// parseAndDeliverNetworkError(request, volleyError);
 		} catch (Exception e) {
 			VolleyLog.e(e, "Unhandled exception %s", e.toString());
@@ -152,14 +152,16 @@ public class CurrentNetworkDispatcher {
 		} else {
 			request.finish("done");
 		}
-		if(response.isSuccess()){
-			return response.result;
+		if (response.isSuccess()) {
+			T t = response.result;
+			System.out.println("正真返回数据=" + t.getClass());
+			return t;
 		}
 		return null;
 	}
 
-//	private void parseAndDeliverNetworkError(Request<?> request, VolleyError error) {
-//		error = request.parseNetworkError(error);
-//		mDelivery.postError(request, error);
-//	}
+	// private void parseAndDeliverNetworkError(Request<?> request, VolleyError error) {
+	// error = request.parseNetworkError(error);
+	// mDelivery.postError(request, error);
+	// }
 }
