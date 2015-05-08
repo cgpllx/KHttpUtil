@@ -30,7 +30,6 @@ import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
  */
 public class KStringRequest extends KRequest<String> {
 	/**
-	 * 
 	 * @param method
 	 *            请求方式
 	 * @param url
