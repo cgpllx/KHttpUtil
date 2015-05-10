@@ -55,9 +55,6 @@ public class KJsonObjectRequest extends KRequest<JSONObject> {
 		super(url, params, listener, errorListener);
 	}
 
-	public KJsonObjectRequest(String url, Map<String, String> headers, Map<String, String> params, Listener<JSONObject> listener, ErrorListener errorListener) {
-		super(url, headers, params, listener, errorListener);
-	}
 
 	public KJsonObjectRequest(String url) {
 		super(url);

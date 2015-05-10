@@ -56,10 +56,6 @@ public class KGsonRequest<T> extends KRequest<T> {
 		super(url, params, listener, errorListener);
 	}
 
-	public KGsonRequest(String url, Map<String, String> headers, Map<String, String> params, Listener<T> listener, ErrorListener errorListener) {
-		super(url, headers, params, listener, errorListener);
-	}
-
 	public KGsonRequest(String url) {
 		super(url);
 	}

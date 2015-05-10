@@ -56,10 +56,6 @@ public class KJsonArrayRequest extends KRequest<JSONArray> {
 		super(url, params, listener, errorListener);
 	}
 
-	public KJsonArrayRequest(String url, Map<String, String> headers, Map<String, String> params, Listener<JSONArray> listener, ErrorListener errorListener) {
-		super(url, headers, params, listener, errorListener);
-	}
-
 	public KJsonArrayRequest(String url) {
 		super(url);
 	}

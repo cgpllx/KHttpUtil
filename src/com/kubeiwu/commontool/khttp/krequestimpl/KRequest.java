@@ -42,14 +42,9 @@ public abstract class KRequest<T> extends Request<T> {
 	}
 
 	// get----------------------------------------------------
-	public KRequest(String url, Map<String, String> headers,//
-			Map<String, String> params, Listener<T> listener, ErrorListener errorListener) {
-		this(Method.GET, url, headers, params, listener, errorListener);
-	}
-
-	public KRequest(String url, Map<String, String> params, Listener<T> listener,//
+	public KRequest(String url, Map<String, String> headers, Listener<T> listener,//
 			ErrorListener errorListener) {
-		this(url, null, params, listener, errorListener);
+		this(Method.GET, url, headers, null, listener, errorListener);
 	}
 
 	public KRequest(String url, Map<String, String> headers) {
@@ -57,15 +52,15 @@ public abstract class KRequest<T> extends Request<T> {
 	}
 
 	public KRequest(String url, Listener<T> listener, ErrorListener errorListener) {
-		this(url, null, null, listener, errorListener);
+		this(url, null, listener, errorListener);
 	}
 
 	public KRequest(String url, Listener<T> listener) {
-		this(url, null, null, listener, null);
+		this(url, null, listener, null);
 	}
 
 	public KRequest(String url) {
-		this(url, null, null, null, null);
+		this(url, null, null, null);
 	}
 
 	// get----------------------------------------------------
