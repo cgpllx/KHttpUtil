@@ -20,7 +20,6 @@ public class KGsonRequest<T> extends KRequest<T> {
 		super(method, url, headers, params, listener, errorListener);
 	}
 
-	 
 	public KGsonRequest(int method, String url, Listener<T> listener) {
 		super(method, url, listener);
 	}
@@ -29,11 +28,9 @@ public class KGsonRequest<T> extends KRequest<T> {
 		super(method, url, headers, params);
 	}
 
-
 	public KGsonRequest(String url, Map<String, String> headers) {
 		super(url, headers);
 	}
-
 
 	public KGsonRequest(int method, String url, Map<String, String> params, Listener<T> listener, ErrorListener errorListener) {
 		super(method, url, params, listener, errorListener);
@@ -67,17 +64,29 @@ public class KGsonRequest<T> extends KRequest<T> {
 		super(url);
 	}
 
+	/**
+	 * 注意：如果T的类型比较复杂（比如T中有泛型），请设置此方法名称类型，防止泛型被擦除，找不到对应的类型，导致解析出错
+	 * 
+	 * @param clazz
+	 */
+	public void setResponseType(Class<T> clazz) {
+		this.mClazz = clazz;
+	}
 
-	protected final static Gson gson = new Gson();
+	protected final static Gson mGson = new Gson();
+	private Class<T> mClazz = null;
 
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-				System.out.println("正真返回数据的字符串="+json);
-			T t = gson.fromJson(json, new TypeToken<T>() {
-			}.getType());
-			System.out.println("正真返回数据的字符串TTT==="+t);
+			T t = null;
+			if (mClazz == null) {
+				t = mGson.fromJson(json, new TypeToken<T>() {
+				}.getType());
+			} else {
+				t = mGson.fromJson(json, mClazz);
+			}
 			return Response.success(t, HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));
@@ -85,4 +94,5 @@ public class KGsonRequest<T> extends KRequest<T> {
 			return Response.error(new ParseError(e));
 		}
 	}
+
 }
