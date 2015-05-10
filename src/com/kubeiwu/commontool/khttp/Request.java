@@ -19,6 +19,7 @@ package com.kubeiwu.commontool.khttp;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.net.TrafficStats;
@@ -27,6 +28,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.kubeiwu.commontool.khttp.VolleyLog.MarkerLog;
 import com.kubeiwu.commontool.khttp.cache.Cache;
@@ -338,6 +341,14 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 				encodedParams.append('&');
 			}
 			return encodedParams.toString().getBytes(paramsEncoding);
+		} catch (UnsupportedEncodingException uee) {
+			throw new RuntimeException("Encoding not supported: " + paramsEncoding, uee);
+		}
+	}
+
+	public String encodeParameter(String param, String paramsEncoding) {
+		try {
+			return URLEncoder.encode(param, paramsEncoding);
 		} catch (UnsupportedEncodingException uee) {
 			throw new RuntimeException("Encoding not supported: " + paramsEncoding, uee);
 		}

@@ -59,6 +59,62 @@ public class KGsonRequest<T> extends KRequest<T> {
 	public KGsonRequest(String url) {
 		super(url);
 	}
+	//-----------------显示添加类型
+	public KGsonRequest(int method, String url, Map<String, String> headers,//
+			Map<String, String> params, Listener<T> listener, ErrorListener errorListener,Class<T> clazz) {
+		super(method, url, headers, params, listener, errorListener);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(int method, String url, Listener<T> listener,Class<T> clazz) {
+		super(method, url, listener);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(int method, String url, Map<String, String> headers, Map<String, String> params,Class<T> clazz) {
+		super(method, url, headers, params);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(String url, Map<String, String> headers,Class<T> clazz) {
+		super(url, headers);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(int method, String url, Map<String, String> params, Listener<T> listener, ErrorListener errorListener,Class<T> clazz) {
+		super(method, url, params, listener, errorListener);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(int method, String url, Map<String, String> params, Listener<T> listener,Class<T> clazz) {
+		super(method, url, params, listener);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(int method, String url, Map<String, String> params,Class<T> clazz) {
+		super(method, url, params);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(String url, Listener<T> listener, ErrorListener errorListener,Class<T> clazz) {
+		super(url, listener, errorListener);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(String url, Listener<T> listener,Class<T> clazz) {
+		super(url, listener);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(String url, Map<String, String> params, Listener<T> listener, ErrorListener errorListener,Class<T> clazz) {
+		super(url, params, listener, errorListener);
+		setResponseType(clazz);
+	}
+	
+	public KGsonRequest(String url,Class<T> clazz) {
+		super(url);
+		setResponseType(clazz);
+	}
 
 	/**
 	 * 注意：如果T的类型比较复杂（比如T中有泛型），请设置此方法名称类型，防止泛型被擦除，找不到对应的类型，导致解析出错
