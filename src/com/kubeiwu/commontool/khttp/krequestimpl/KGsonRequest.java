@@ -144,6 +144,8 @@ public class KGsonRequest<T> extends KRequest<T> {
 			return Response.error(new ParseError(e));
 		} catch (JsonSyntaxException e) {
 			return Response.error(new ParseError(e));
+		}catch (Exception e) {
+			return Response.error(new ParseError(e));
 		}
 	}
 
