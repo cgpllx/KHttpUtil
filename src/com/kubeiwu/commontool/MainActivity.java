@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity {
 		// text6();
 		// getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new ListViewFragment()).commit();
 		// ziptext1();
-		text10();
+		text11();
 	}
 
 	@Override
@@ -284,14 +284,14 @@ public class MainActivity extends FragmentActivity {
 		System.out.println("结果ming:11111111111");
 
 		System.out.println("结果ming333333333:");
-//		Response<String> res = mQueue.currentThreadExecute(new KStringRequest(url, null));
+		// Response<String> res = mQueue.currentThreadExecute(new KStringRequest(url, null));
 		// res.success(result, cacheEntry);
 		// res.isSuccess()
-//		String s = res.result;
+		// String s = res.result;
 		// Response<List<Pojo>> res=mQueue.currentThreadExecute(new KGsonArrayRequest<Pojo>(Method.GET, url, null, null, null,null, Pojo.class));
 
 		// mQueue.start();
-//		System.out.println(s);
+		// System.out.println(s);
 		System.out.println("结果ming:555555555555555");
 	}
 
@@ -312,11 +312,35 @@ public class MainActivity extends FragmentActivity {
 		System.out.println("结果ming:11111111111");
 
 		System.out.println("结果ming333333333:");
-//		Response<String> res = mQueue.currentThreadExecute(new KStringRequest(url, null));
+		// Response<String> res = mQueue.currentThreadExecute(new KStringRequest(url, null));
 		// res.success(result, cacheEntry);
 		// res.isSuccess()
-		 List<Pojo>  res = mQueue.currentThreadExecute(new KGsonRequest<List<Pojo>>(url));
-//		List<Pojo> s = res.result;
+		List<Pojo> res = mQueue.currentThreadExecute(new KGsonRequest<List<Pojo>>(url) {
+			protected void deliverHeaders(Map<String, String> headers) {
+				for (String s : headers.keySet()) {
+					System.out.println(s + "=" + headers.get(s));
+				}
+			}
+		});
+		// List<Pojo> s = res.result;
+
+		// mQueue.start();
+		System.out.println(res);
+		System.out.println("结果ming:555555555555555");
+	}
+
+	public void text11() {
+		String url = "http://www.baidu.com";
+//		String url = "http://market.konkacloud.cn/client/recommend?type=4";
+		RequestQueue mQueue = KRequestQueueManager.getRequestQueue();
+
+		String res = mQueue.currentThreadExecute(new KStringRequest(url) {
+			protected void deliverHeaders(Map<String, String> headers) {
+				for (String s : headers.keySet()) {
+					System.out.println(s + "=" + headers.get(s));
+				}
+			}
+		});
 
 		// mQueue.start();
 		System.out.println(res);
