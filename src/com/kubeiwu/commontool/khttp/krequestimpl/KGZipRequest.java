@@ -34,6 +34,7 @@ public class KGZipRequest extends KRequest<String> {
 	// parse the gzip response using a GZIPInputStream
 	@Override
 	protected Response<String> parseNetworkResponse(NetworkResponse response) {
+		super.parseNetworkResponse(response);
 		StringBuffer output = new StringBuffer();
 		try {
 			GZIPInputStream gStream = new GZIPInputStream(new ByteArrayInputStream(response.data));

@@ -130,6 +130,7 @@ public class KGsonRequest<T> extends KRequest<T> {
 
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
+		super.parseNetworkResponse(response);
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			T t = null;

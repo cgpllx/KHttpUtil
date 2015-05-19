@@ -32,6 +32,7 @@ public class KSimpleMultiPartRequest extends KMultiPartRequest<String> {
 
 	@Override
 	protected Response<String> parseNetworkResponse(NetworkResponse response) {
+		super.parseNetworkResponse(response);
 		try {
 			String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			return Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(response));

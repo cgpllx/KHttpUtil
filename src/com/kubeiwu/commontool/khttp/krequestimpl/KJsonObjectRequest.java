@@ -55,13 +55,13 @@ public class KJsonObjectRequest extends KRequest<JSONObject> {
 		super(url, params, listener, errorListener);
 	}
 
-
 	public KJsonObjectRequest(String url) {
 		super(url);
 	}
 
 	@Override
 	protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+		super.parseNetworkResponse(response);
 		try {
 			String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));

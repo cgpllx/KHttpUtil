@@ -62,6 +62,7 @@ public class KJsonArrayRequest extends KRequest<JSONArray> {
 
 	@Override
 	protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+		super.parseNetworkResponse(response);
 		try {
 			String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			return Response.success(new JSONArray(jsonString), HttpHeaderParser.parseCacheHeaders(response));
