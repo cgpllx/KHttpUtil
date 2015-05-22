@@ -84,7 +84,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
 	/** Whether or not responses to this request should be cached. */
 	private boolean mShouldCache = true;// 是否需要缓存
-
+	/**
+	 * 强制从网络中获取数据
+	 */
+	private boolean mForceDataFromNetwork = false;// 强制从网络中获取数据
 	/** Whether or not this request has been canceled. */
 	private boolean mCanceled = false;
 
@@ -363,10 +366,24 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 	}
 
 	/**
+	 * Set whether or not responses to this request should be cached.
+	 */
+	public final Request<T> setForceDataFromNetwork(boolean forceDataFromNetwork) {
+		mForceDataFromNetwork = forceDataFromNetwork;
+		return this;
+	}
+
+	/**
 	 * Returns true if responses to this request should be cached.
 	 */
 	public final boolean shouldCache() {
 		return mShouldCache;
+	}
+	/**
+	 * Returns true if responses to this request should be cached.
+	 */
+	public final boolean forceDataFromNetwork() {
+		return mForceDataFromNetwork;
 	}
 
 	/**

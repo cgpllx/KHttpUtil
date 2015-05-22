@@ -97,8 +97,8 @@ public class RequestQueue {// 一般是单列的
 		mCache = cache;
 		mNetwork = network;
 		mDispatchers = new NetworkDispatcher[threadPoolSize];
-		currentNetworkDispatcher = new CurrentNetworkDispatcher(network, cache  );// 所以初始化
-		currentCacheDispatcher = new CurrentCacheDispatcher(currentNetworkDispatcher, cache  );
+		currentNetworkDispatcher = new CurrentNetworkDispatcher(network, cache);// 所以初始化
+		currentCacheDispatcher = new CurrentCacheDispatcher(currentNetworkDispatcher, cache);
 		mDelivery = delivery;
 	}
 
@@ -230,7 +230,7 @@ public class RequestQueue {// 一般是单列的
 		request.addMarker("add-to-queue");
 
 		// If the request is uncacheable, skip the cache queue and go straight to the network.
-		if (!request.shouldCache()) {// 如果不需要缓存就直接加到网络请求队列中
+		if (dataCanFromCache(request)) {// 如果不需要缓存就直接加到网络请求队列中
 			mNetworkQueue.add(request);
 			return request;
 		}
@@ -260,6 +260,16 @@ public class RequestQueue {// 一般是单列的
 		}
 	}
 
+	/**
+	 * 是否可以缓存 ，是否强制从网络中获取数据
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private boolean dataCanFromCache(Request request) {
+		return !request.shouldCache() || request.forceDataFromNetwork();
+	}
+
 	private CurrentNetworkDispatcher currentNetworkDispatcher;
 	private CurrentCacheDispatcher currentCacheDispatcher;
 
@@ -274,10 +284,9 @@ public class RequestQueue {// 一般是单列的
 		request.setSequence(getSequenceNumber());// 设置序号
 		request.addMarker("add-to-queue");
 		// If the request is uncacheable, skip the cache queue and go straight to the network.
-		if (!request.shouldCache()) {// 如果不需要缓存就直接加到网络请求队列中
+		if (dataCanFromCache(request)) {// 如果不需要缓存就直接加到网络请求队列中
 			// mNetworkQueue.add(request);
 			return currentNetworkDispatcher.execute(request);
-//			return request;
 		}
 
 		// Insert request into stage if there's already a request with the same cache key in flight.
@@ -302,7 +311,6 @@ public class RequestQueue {// 一般是单列的
 				// mCacheQueue.add(request);
 				return currentCacheDispatcher.execute(request);
 			}
-//			return request;
 		}
 		return null;
 	}
