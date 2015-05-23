@@ -19,9 +19,6 @@ package com.kubeiwu.commontool.khttp;
 import android.annotation.SuppressLint;
 import android.net.TrafficStats;
 import android.os.Build;
-import android.os.Process;
-
-import java.util.concurrent.BlockingQueue;
 
 import com.kubeiwu.commontool.khttp.cache.Cache;
 import com.kubeiwu.commontool.khttp.exception.VolleyError;
@@ -66,13 +63,15 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 	/**
 	 * Forces this dispatcher to quit immediately. If any requests are still in the queue, they are not guaranteed to be processed.
 	 */
+	
+	@Override
 	public void quit() {
 		mQuit = true;
 		// interrupt();
 	}
 
 	// @SuppressLint("NewApi")
-	// @Override
+	 @Override
 	@SuppressLint("NewApi")
 	public <T> T execute(Request<T> mRequest) {
 		Request<T> request;

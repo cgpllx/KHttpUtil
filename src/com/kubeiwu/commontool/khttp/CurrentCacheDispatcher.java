@@ -65,14 +65,16 @@ public class CurrentCacheDispatcher extends CurrentDispatcher {
 	}
 
 	/**
-	 * Forces this dispatcher to quit immediately. If any requests are still in the queue, they are not guaranteed to be processed.
+	 * Forces this dispatcher to quit immediately. 
+	 * If any requests are still in the queue, they are not guaranteed to be processed.
 	 */
+	@Override
 	public void quit() {
 		mQuit = true;
 		// interrupt();
 	}
 
-	// @Override
+	@Override
 	public <T> T execute(Request<T> mRequest) {
 		if (DEBUG)
 			VolleyLog.v("当前线程中的缓存 ");

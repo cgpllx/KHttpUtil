@@ -1,7 +1,7 @@
 package com.kubeiwu.commontool.khttp;
 
 
-public class CurrentDispatcher {
+public abstract class CurrentDispatcher {
 
 	public <T> T completion(Request<T> request, Response<T> response) {
 		// If this request has canceled, finish it and don't deliver.
@@ -23,5 +23,6 @@ public class CurrentDispatcher {
 		}
 		return null;
 	}
-
+	public abstract <T> T execute(Request<T> mRequest) ;
+	public abstract void quit();
 }
