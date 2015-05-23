@@ -16,10 +16,6 @@
 
 package com.kubeiwu.commontool.khttp;
 
-import android.os.Process;
-
-import java.util.concurrent.BlockingQueue;
-
 import com.kubeiwu.commontool.khttp.cache.Cache;
 
 /**
@@ -27,8 +23,7 @@ import com.kubeiwu.commontool.khttp.cache.Cache;
  * 
  * 请添加到指定的缓存队列解决高速缓存。 Any deliverable response is posted back to the caller via a {@link ResponseDelivery}. Cache misses and responses that require refresh are enqueued on the specified network queue for processing by a {@link NetworkDispatcher}.
  */
-@SuppressWarnings("rawtypes")
-public class CurrentCacheDispatcher {
+public class CurrentCacheDispatcher extends CurrentDispatcher {
 
 	private static final boolean DEBUG = VolleyLog.DEBUG;
 
@@ -162,40 +157,5 @@ public class CurrentCacheDispatcher {
 			}
 			return null;
 		}
-	}
-
-	/**
-	 * 这个方法要抽取
-	 * 
-	 * @param <T>
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	public <T> T completion(Request<T> request, Response<T> response) {
-		// If this request has canceled, finish it and don't deliver.
-		if (request.isCanceled()) {
-			request.finish("canceled-at-delivery");
-			return null;
-		}
-
-		// Deliver a normal response or error, depending.
-		// if (response.isSuccess()) {
-		// request.deliverResponse(response.result);
-		// } else {
-		// request.deliverError(response.error);
-		// }
-
-		// If this is an intermediate response, add a marker, otherwise we're done
-		// and the request can be finished.
-		if (response.intermediate) {
-			request.addMarker("intermediate-response");
-		} else {
-			request.finish("done");
-		}
-		if(response.isSuccess()){
-			return response.result;
-		}
-		return null;
 	}
 }

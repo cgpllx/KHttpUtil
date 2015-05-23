@@ -288,31 +288,36 @@ public class RequestQueue {// 一般是单列的
 			// mNetworkQueue.add(request);
 			return currentNetworkDispatcher.execute(request);
 		}
+		return currentCacheDispatcher.execute(request);
 
-		// Insert request into stage if there's already a request with the same cache key in flight.
-		synchronized (mWaitingRequests) {// mWaitingRequests 是一个map集合，key就是缓存的key，value是Queue<Request
-			String cacheKey = request.getCacheKey();// 这里返回的key是url
-			if (mWaitingRequests.containsKey(cacheKey)) {// 已经有请求在排队了，把他加在请求的后面
-				// There is already a request in flight. Queue up.
-				Queue<Request> stagedRequests = mWaitingRequests.get(cacheKey);
-				if (stagedRequests == null) {
-					stagedRequests = new LinkedList<Request>();// LinkedList是Queue的子类
-				}
-				stagedRequests.add(request);
-				mWaitingRequests.put(cacheKey, stagedRequests);
-				if (VolleyLog.DEBUG) {
-					VolleyLog.v("Request for cacheKey=%s is in flight, putting on hold.", cacheKey);
-				}
-			} else {
-				// Insert 'null' queue for this cacheKey, indicating there is now a request in
-				// flight.
-				// 这个请求没有请求过，就添到加去请求(先到mCacheQueue中，mCacheQueue如果没有就添加到网络请求)
-				mWaitingRequests.put(cacheKey, null);
-				// mCacheQueue.add(request);
-				return currentCacheDispatcher.execute(request);
-			}
-		}
-		return null;
+		/**
+		 * <pre>
+		 * // Insert request into stage if there's already a request with the same cache key in flight.
+		 * synchronized (mWaitingRequests) {// mWaitingRequests 是一个map集合，key就是缓存的key，value是Queue&lt;Request
+		 * 	String cacheKey = request.getCacheKey();// 这里返回的key是url
+		 * 	if (mWaitingRequests.containsKey(cacheKey)) {// 已经有请求在排队了，把他加在请求的后面
+		 * 		// There is already a request in flight. Queue up.
+		 * 		Queue&lt;Request&gt; stagedRequests = mWaitingRequests.get(cacheKey);
+		 * 		if (stagedRequests == null) {
+		 * 			stagedRequests = new LinkedList&lt;Request&gt;();// LinkedList是Queue的子类
+		 * 		}
+		 * 		stagedRequests.add(request);
+		 * 		mWaitingRequests.put(cacheKey, stagedRequests);
+		 * 		if (VolleyLog.DEBUG) {
+		 * 			VolleyLog.v(&quot;Request for cacheKey=%s is in flight, putting on hold.&quot;, cacheKey);
+		 * 		}
+		 * 	} else {
+		 * 		// Insert 'null' queue for this cacheKey, indicating there is now a request in
+		 * 		// flight.
+		 * 		// 这个请求没有请求过，就添到加去请求(先到mCacheQueue中，mCacheQueue如果没有就添加到网络请求)
+		 * 		mWaitingRequests.put(cacheKey, null);
+		 * 		// mCacheQueue.add(request);
+		 * 		return currentCacheDispatcher.execute(request);
+		 * 	}
+		 * }
+		 * </pre>
+		 */
+		// return null;
 	}
 
 	/**
