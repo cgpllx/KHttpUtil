@@ -43,8 +43,7 @@ public interface Cache {
 	public void put(String key, Entry entry);
 
 	/**
-	 * Performs any potentially long-running actions needed to initialize the
-	 * cache; will be called from a worker thread.
+	 * Performs any potentially long-running actions needed to initialize the cache; will be called from a worker thread.
 	 */
 	public void initialize();
 
@@ -70,8 +69,10 @@ public interface Cache {
 	 * Empties the cache.
 	 */
 	public void clear();
-	
+
 	public long getCacheSize();
+
+	public static final String CACHE_DURATION = "Cache_Duration";
 
 	/**
 	 * Data and metadata for an entry returned by the cache.
@@ -80,7 +81,7 @@ public interface Cache {
 		/**
 		 * 默认缓存毫秒数
 		 */
-		public static final int DEFAULT_CACHE_DURATION  = 10 * 60 * 1000;// 10分钟
+		public static final int DEFAULT_CACHE_DURATION = 10 * 60 * 1000;// 10分钟
 		/** The data returned from cache. */
 		public byte[] data;
 

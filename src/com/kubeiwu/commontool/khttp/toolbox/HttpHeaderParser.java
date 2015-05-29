@@ -91,7 +91,20 @@ public class HttpHeaderParser {
 			// softExpire.
 			softExpire = now + (serverExpires - serverDate);
 		} else {
-			softExpire = now + Cache.Entry.DEFAULT_CACHE_DURATION;
+			long cache_Duration = Cache.Entry.DEFAULT_CACHE_DURATION;
+			try {
+				if (headers.containsKey(Cache.CACHE_DURATION)) {
+					String cache_DurationString = headers.get(Cache.CACHE_DURATION);
+					long duration = Long.parseLong(cache_DurationString);
+					if (duration != 0) {
+						cache_Duration = duration;
+					}
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+			softExpire = now + cache_Duration;
+
 		}
 		System.out.println("缓存时间" + softExpire);
 		Cache.Entry entry = new Cache.Entry();

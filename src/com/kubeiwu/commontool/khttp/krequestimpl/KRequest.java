@@ -1,6 +1,5 @@
 package com.kubeiwu.commontool.khttp.krequestimpl;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import com.kubeiwu.commontool.khttp.NetworkResponse;
@@ -8,8 +7,8 @@ import com.kubeiwu.commontool.khttp.Request;
 import com.kubeiwu.commontool.khttp.Response;
 import com.kubeiwu.commontool.khttp.Response.ErrorListener;
 import com.kubeiwu.commontool.khttp.Response.Listener;
+import com.kubeiwu.commontool.khttp.cache.Cache;
 import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
-import com.kubeiwu.commontool.khttp.toolbox.HttpHeaderParser;
 
 /**
  * @author cgpllx1@qq.com (www.kubeiwu.com)
@@ -112,14 +111,30 @@ public abstract class KRequest<T> extends Request<T> {
 
 	/**
 	 * 重写这个方法获取响应头信息 通过可以为 Set-Cookie 可以获取cookie信息
+	 * 
 	 * @param headers
 	 */
-	protected void deliverHeaders(Map<String,String> headers){
-		
+	protected void deliverHeaders(Map<String, String> headers) {
+
 	}
+
+	/**
+	 * 设置缓存到期时间
+	 * 
+	 * @param duration
+	 */
+	public void setCache_Duration(long duration) {
+		this.mCache_Duration = duration;
+	}
+
+	private long mCache_Duration = 0;
+
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
 		deliverHeaders(response.headers);
+		if (mCache_Duration != 0) {
+			response.headers.put(Cache.CACHE_DURATION, mCache_Duration + "");
+		}
 		return null;
 	}
 }
