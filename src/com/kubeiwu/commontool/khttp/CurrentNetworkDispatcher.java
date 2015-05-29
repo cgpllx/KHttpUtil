@@ -19,9 +19,6 @@ package com.kubeiwu.commontool.khttp;
 import android.annotation.SuppressLint;
 import android.net.TrafficStats;
 import android.os.Build;
-import android.os.Process;
-
-import java.util.concurrent.BlockingQueue;
 
 import com.kubeiwu.commontool.khttp.cache.Cache;
 import com.kubeiwu.commontool.khttp.exception.VolleyError;
@@ -32,7 +29,7 @@ import com.kubeiwu.commontool.khttp.superinterface.Network;
  * 
  * Requests added to the specified queue are processed from the network via a specified {@link Network} interface. Responses are committed to cache, if eligible, using a specified {@link Cache} interface. Valid responses and errors are posted back to the caller via a {@link ResponseDelivery}.
  */
-public class CurrentNetworkDispatcher {
+public class CurrentNetworkDispatcher extends CurrentDispatcher {
 	/** The queue of requests to service. */
 	// private final BlockingQueue<Request> mQueue;
 	/** The network interface for processing requests. */
@@ -66,13 +63,15 @@ public class CurrentNetworkDispatcher {
 	/**
 	 * Forces this dispatcher to quit immediately. If any requests are still in the queue, they are not guaranteed to be processed.
 	 */
+	
+	@Override
 	public void quit() {
 		mQuit = true;
 		// interrupt();
 	}
 
 	// @SuppressLint("NewApi")
-	// @Override
+	 @Override
 	@SuppressLint("NewApi")
 	public <T> T execute(Request<T> mRequest) {
 		Request<T> request;
@@ -130,38 +129,4 @@ public class CurrentNetworkDispatcher {
 		}
 		return null;
 	}
-
-	public <T> T completion(Request<T> request, Response<T> response) {
-		// If this request has canceled, finish it and don't deliver.
-		if (request.isCanceled()) {
-			request.finish("canceled-at-delivery");
-			return null;
-		}
-
-		// Deliver a normal response or error, depending.
-		// if (response.isSuccess()) {
-		// request.deliverResponse(response.result);
-		// } else {
-		// request.deliverError(response.error);
-		// }
-
-		// If this is an intermediate response, add a marker, otherwise we're done
-		// and the request can be finished.
-		if (response.intermediate) {
-			request.addMarker("intermediate-response");
-		} else {
-			request.finish("done");
-		}
-		if (response.isSuccess()) {
-			T t = response.result;
-			System.out.println("正真返回数据=" + t.getClass());
-			return t;
-		}
-		return null;
-	}
-
-	// private void parseAndDeliverNetworkError(Request<?> request, VolleyError error) {
-	// error = request.parseNetworkError(error);
-	// mDelivery.postError(request, error);
-	// }
 }
