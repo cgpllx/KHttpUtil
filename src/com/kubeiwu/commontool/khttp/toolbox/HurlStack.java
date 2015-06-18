@@ -120,22 +120,23 @@ public class HurlStack implements HttpStack {
 		response.setEntity(entityFromConnection(connection));
 		for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
 			if (header.getKey() != null) {
-				Header h = new BasicHeader(header.getKey(), header.getValue().get(0));
-				response.addHeader(h);
-				// String key = header.getKey();
-				// List<String> values = header.getValue();
-				// if (key.equalsIgnoreCase("set-cookie")) {
-				// StringBuilder cookieString = new StringBuilder();
-				// for (String value : values) {
-				// cookieString.append(value).append("\n");// 用\n作为分隔符，cookie中不应该有回车符号
-				// }
-				// cookieString.deleteCharAt(cookieString.length() - 1);
-				// Header h = new BasicHeader(header.getKey(), cookieString.toString());
+				// Header h = new BasicHeader(header.getKey(), header.getValue().get(0));
 				// response.addHeader(h);
-				// } else {
-				// Header h = new BasicHeader(header.getKey(), values.get(0));
-				// response.addHeader(h);
-				// }
+				//添加多个cookie的获取
+				String key = header.getKey();
+				List<String> values = header.getValue();
+				if (key.equalsIgnoreCase("set-cookie")) {
+					StringBuilder cookieString = new StringBuilder();
+					for (String value : values) {
+						cookieString.append(value).append("\n");// 用\n作为分隔符，cookie中不应该有回车符号
+					}
+					cookieString.deleteCharAt(cookieString.length() - 1);
+					Header h = new BasicHeader(header.getKey(), cookieString.toString());
+					response.addHeader(h);
+				} else {
+					Header h = new BasicHeader(header.getKey(), values.get(0));
+					response.addHeader(h);
+				}
 			}
 		}
 		return response;
