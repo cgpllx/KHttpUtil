@@ -90,7 +90,8 @@ public class HurlStack implements HttpStack {
 	public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders) throws IOException, AuthFailureError {
 		String url = request.getUrl();
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.putAll(request.getHeaders());
+		map.putAll(request.getHeaders());//
+		System.out.println("request.getHeaders()--"+request.getHeaders());
 		map.putAll(additionalHeaders);
 		if (mUrlRewriter != null) {
 			String rewritten = mUrlRewriter.rewriteUrl(url);// 重写url
@@ -139,6 +140,7 @@ public class HurlStack implements HttpStack {
 				}
 			}
 		}
+		System.out.println("performRequest---999999-getStatusLine="+response.getStatusLine());
 		return response;
 	}
 

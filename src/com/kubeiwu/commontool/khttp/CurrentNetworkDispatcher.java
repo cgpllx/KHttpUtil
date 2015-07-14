@@ -77,7 +77,6 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 		Request<T> request;
 		request = mRequest;
 		try {
-			System.out.println(request.isCanceled());
 			request.addMarker("current_network-queue-take");
 
 			if (mQuit) {
@@ -121,8 +120,9 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 			// mDelivery.postCurrentResponse(request, response, null);
 			return completion(request, response);
 		} catch (VolleyError volleyError) {
+			volleyError.printStackTrace();
 			// VolleyLog.e(volleyError, null);
-			// parseAndDeliverNetworkError(request, volleyError);
+//			 parseAndDeliverNetworkError(request, volleyError);
 		} catch (Exception e) {
 			VolleyLog.e(e, "Unhandled exception %s", e.toString());
 			// mDelivery.postError(request, new VolleyError(e));
