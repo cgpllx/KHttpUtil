@@ -91,7 +91,6 @@ public class HurlStack implements HttpStack {
 		String url = request.getUrl();
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.putAll(request.getHeaders());//
-		System.out.println("request.getHeaders()--"+request.getHeaders());
 		map.putAll(additionalHeaders);
 		if (mUrlRewriter != null) {
 			String rewritten = mUrlRewriter.rewriteUrl(url);// 重写url

@@ -1,5 +1,6 @@
 package com.kubeiwu.commontool.khttp.krequestimpl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.kubeiwu.commontool.khttp.NetworkResponse;
@@ -8,6 +9,7 @@ import com.kubeiwu.commontool.khttp.Response;
 import com.kubeiwu.commontool.khttp.Response.ErrorListener;
 import com.kubeiwu.commontool.khttp.Response.Listener;
 import com.kubeiwu.commontool.khttp.cache.Cache;
+import com.kubeiwu.commontool.khttp.cookiemassage.CookieStoreManager;
 import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
 
 /**
@@ -17,8 +19,8 @@ import com.kubeiwu.commontool.khttp.exception.AuthFailureError;
  * @param <T>
  */
 public abstract class KRequest<T> extends Request<T> {
-	private final Map<String, String> headers;
-	private final Map<String, String> params;
+	private final Map<String, String> mHeaders;
+	private final Map<String, String> mParams;
 	private final Listener<T> listener;
 
 	/**
@@ -39,8 +41,8 @@ public abstract class KRequest<T> extends Request<T> {
 	 */
 	public KRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Listener<T> listener, ErrorListener errorListener) {
 		super(method, url, errorListener);
-		this.headers = headers;
-		this.params = params;
+		this.mHeaders = headers;
+		this.mParams = params;
 		this.listener = listener;
 	}
 
@@ -94,12 +96,19 @@ public abstract class KRequest<T> extends Request<T> {
 	// post----------------------------------------------------
 	@Override
 	public Map<String, String> getHeaders() throws AuthFailureError {
-		return headers != null ? headers : super.getHeaders();
+		Map<String, String> headers = null;
+		if (mShouldAddCookiesToRequest) {
+			headers = mHeaders != null ? mHeaders : new HashMap<String, String>();// Collections.emptyMap()//这个map不能添加数据的 所以这里缓存hashmap
+			CookieStoreManager.getCookieStore().addCookiesToHeaders(headers);
+		} else {
+			headers = mHeaders != null ? mHeaders : super.getHeaders();
+		}
+		return headers;
 	}
 
 	@Override
 	protected Map<String, String> getParams() throws AuthFailureError {
-		return params != null ? params : super.getParams();
+		return mParams != null ? mParams : super.getParams();
 	}
 
 	@Override
@@ -115,7 +124,31 @@ public abstract class KRequest<T> extends Request<T> {
 	 * @param headers
 	 */
 	protected void deliverHeaders(Map<String, String> headers) {
+		if (mShouldSaveCookies) {
+			CookieStoreManager.getCookieStore().saveCookiesFromHeaders(headers);
+		}
+	}
 
+	private boolean mShouldSaveCookies = true;// 是否需要保存cookies
+	private boolean mShouldAddCookiesToRequest = true;// 请求中添加cookies
+
+	/**
+	 * 是否保存当前请求的cookies
+	 * 
+	 * @param shouldSaveCookies
+	 */
+	public void setShouldSaveCookies(boolean shouldSaveCookies) {
+		mShouldSaveCookies = shouldSaveCookies;
+	}
+
+	/**
+	 * 请求时候是否附带cookies
+	 * 
+	 * @param shouldAddCookiesToRequest
+	 */
+
+	public void setShouldAddCookiesToRequest(boolean shouldAddCookiesToRequest) {
+		mShouldAddCookiesToRequest = shouldAddCookiesToRequest;
 	}
 
 	/**

@@ -63,7 +63,7 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 	/**
 	 * Forces this dispatcher to quit immediately. If any requests are still in the queue, they are not guaranteed to be processed.
 	 */
-	
+
 	@Override
 	public void quit() {
 		mQuit = true;
@@ -71,7 +71,7 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 	}
 
 	// @SuppressLint("NewApi")
-	 @Override
+	@Override
 	@SuppressLint("NewApi")
 	public <T> T execute(Request<T> mRequest) {
 		Request<T> request;
@@ -93,7 +93,6 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 				TrafficStats.setThreadStatsTag(request.getTrafficStatsTag());// 这个是流量统计用的
 			}
-
 			// Perform the network request.
 			NetworkResponse networkResponse = mNetwork.performRequest(request);
 			request.addMarker("network-http-complete");
@@ -121,8 +120,9 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 			return completion(request, response);
 		} catch (VolleyError volleyError) {
 			volleyError.printStackTrace();
+			System.out.println("http-VolleyError--错误");
 			// VolleyLog.e(volleyError, null);
-//			 parseAndDeliverNetworkError(request, volleyError);
+			// parseAndDeliverNetworkError(request, volleyError);
 		} catch (Exception e) {
 			VolleyLog.e(e, "Unhandled exception %s", e.toString());
 			// mDelivery.postError(request, new VolleyError(e));
