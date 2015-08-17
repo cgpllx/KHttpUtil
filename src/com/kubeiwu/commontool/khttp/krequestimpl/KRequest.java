@@ -129,8 +129,8 @@ public abstract class KRequest<T> extends Request<T> {
 		}
 	}
 
-	private boolean mShouldSaveCookies = true;// 是否需要保存cookies
-	private boolean mShouldAddCookiesToRequest = true;// 请求中添加cookies
+	private boolean mShouldSaveCookies = false;// 是否需要保存cookies
+	private boolean mShouldAddCookiesToRequest = false;// 请求中添加cookies
 
 	/**
 	 * 是否保存当前请求的cookies

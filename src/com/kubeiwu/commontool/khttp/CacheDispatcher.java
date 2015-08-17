@@ -20,7 +20,9 @@ import android.os.Process;
 
 import java.util.concurrent.BlockingQueue;
 
+import com.kubeiwu.commontool.khttp.Request.RequestMode;
 import com.kubeiwu.commontool.khttp.cache.Cache;
+import com.kubeiwu.commontool.khttp.exception.VolleyError;
 
 /**
  * 提供一个线程在队列中的请求进行缓存的分类。
@@ -98,6 +100,18 @@ public class CacheDispatcher extends Thread {
 
 				// Attempt to retrieve this item from cache.
 				Cache.Entry entry = mCache.get(request.getCacheKey());
+				// --------------------cgp 2015 -08-13 添加先从网络请求数据，网络没有再充本地缓存中取
+				if (request.getRequestMode() == RequestMode.LOAD_NETWORK_ELSE_CACHE) {// 先网络，然后缓存
+					if (entry != null) {
+						Response<?> response = request.parseNetworkResponse(new NetworkResponse(entry.data, entry.responseHeaders));
+						mDelivery.postResponse(request, response);
+					} else {
+						mDelivery.postError(request, new VolleyError("缓存中没有数据"));
+					}
+					continue;
+				}
+				// --------------------cgp 2015 -08-13
+
 				if (entry == null) {// 缓存中如果没有，就加到网络请求中，不执行后面的了
 					request.addMarker("cache-miss");
 					// Cache miss; send off to the network dispatcher.
@@ -108,7 +122,7 @@ public class CacheDispatcher extends Thread {
 				// If it is completely expired, just send it to the network.
 				if (entry.isExpired()) {// 如果缓存的时间过期了，同上处理
 					request.addMarker("cache-hit-expired");
-					request.setCacheEntry(entry);//  entry中可能有 请求头等信息，所以要放进去给request去使用
+					request.setCacheEntry(entry);// entry中可能有 请求头等信息，所以要放进去给request去使用
 					mNetworkQueue.put(request);
 					continue;
 				}
@@ -145,7 +159,6 @@ public class CacheDispatcher extends Thread {
 						}
 					});
 				}
-
 			} catch (InterruptedException e) {
 				// We may have been interrupted because it was time to quit.
 				if (mQuit) {

@@ -23,6 +23,7 @@ import android.os.Process;
 
 import java.util.concurrent.BlockingQueue;
 
+import com.kubeiwu.commontool.khttp.Request.RequestMode;
 import com.kubeiwu.commontool.khttp.cache.Cache;
 import com.kubeiwu.commontool.khttp.exception.VolleyError;
 import com.kubeiwu.commontool.khttp.superinterface.Network;
@@ -35,7 +36,8 @@ import com.kubeiwu.commontool.khttp.superinterface.Network;
 @SuppressWarnings("rawtypes")
 public class NetworkDispatcher extends Thread {
 	/** The queue of requests to service. */
-	private final BlockingQueue<Request> mQueue;
+	private final BlockingQueue<Request> mNetworkQueue;
+	private final BlockingQueue<Request> mCacheQueue;
 	/** The network interface for processing requests. */
 	private final Network mNetwork;
 	/** The cache to write to. */
@@ -57,13 +59,20 @@ public class NetworkDispatcher extends Thread {
 	 * @param delivery
 	 *            Delivery interface to use for posting responses
 	 */
-	public NetworkDispatcher(BlockingQueue<Request> queue, Network network, Cache cache, ResponseDelivery delivery) {
-		mQueue = queue;
+	public NetworkDispatcher(BlockingQueue<Request> cacheQueue, BlockingQueue<Request> networkQueue, Network network, Cache cache, ResponseDelivery delivery) {
+		mCacheQueue = cacheQueue;
+		mNetworkQueue = networkQueue;
 		mNetwork = network;
 		mCache = cache;
 		mDelivery = delivery;
 	}
 
+	// public CacheDispatcher(BlockingQueue<Request> cacheQueue, BlockingQueue<Request> networkQueue, Cache cache, ResponseDelivery delivery) {
+	// mCacheQueue = cacheQueue;
+	// mNetworkQueue = networkQueue;
+	// mCache = cache;
+	// mDelivery = delivery;
+	// }
 	/**
 	 * Forces this dispatcher to quit immediately. If any requests are still in the queue, they are not guaranteed to be processed.
 	 */
@@ -80,7 +89,7 @@ public class NetworkDispatcher extends Thread {
 		while (true) {
 			try {
 				// Take a request from the queue.
-				request = mQueue.take();
+				request = mNetworkQueue.take();
 			} catch (InterruptedException e) {
 				// We may have been interrupted because it was time to quit.
 				if (mQuit) {
@@ -117,6 +126,14 @@ public class NetworkDispatcher extends Thread {
 
 				// Parse the response here on the worker thread.
 				Response<?> response = request.parseNetworkResponse(networkResponse);
+				System.out.println("NetworkDispatcher=response" + response);
+				System.out.println("NetworkDispatcher=" + "response.result=" + response.result);
+				if (response.result == null && request.getRequestMode() == RequestMode.LOAD_NETWORK_ELSE_CACHE) {
+					System.out.println("mCacheQueue.add(request);");
+					mCacheQueue.add(request);
+					continue;
+				}
+
 				request.addMarker("network-parse-complete");
 
 				// Write to cache if applicable.
@@ -129,7 +146,12 @@ public class NetworkDispatcher extends Thread {
 				// Post the response back.
 				request.markDelivered();
 				mDelivery.postResponse(request, response);
-			} catch (VolleyError volleyError) { 
+			} catch (VolleyError volleyError) {
+				if (request.getRequestMode() == RequestMode.LOAD_NETWORK_ELSE_CACHE) {
+					System.out.println("mCacheQueue.add(request);");
+					mCacheQueue.add(request);
+					continue;
+				}
 				parseAndDeliverNetworkError(request, volleyError);
 			} catch (Exception e) {
 				VolleyLog.e(e, "Unhandled exception %s", e.toString());

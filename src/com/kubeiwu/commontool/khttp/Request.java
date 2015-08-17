@@ -61,6 +61,20 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 		int DELETE = 3;
 	}
 
+	/**
+	 * 请求策越
+	 * 
+	 * @author Administrator
+	 *
+	 */
+	public interface RequestMode {
+		int LOAD_DEFAULT = 0;// 默认不处理
+		int LOAD_NETWORK_ONLY = 1;// 只从网络获取
+		int LOAD_NETWORK_ELSE_CACHE = 2;// 先从网络获取，网络没有取本地
+		int LOAD_CACHE_ELSE_NETWORK = 3;// 先从本地获取，本地没有取网络
+	}
+
+	private int mRequestMode = RequestMode.LOAD_DEFAULT;
 	/** An event log tracing the lifetime of this request; for debugging. */
 	private final MarkerLog mEventLog = MarkerLog.ENABLED ? new MarkerLog() : null;
 
@@ -121,6 +135,14 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 		setRetryPolicy(new DefaultRetryPolicy());
 
 		mDefaultTrafficStatsTag = TextUtils.isEmpty(url) ? 0 : Uri.parse(url).getHost().hashCode();
+	}
+
+	public void setRequestMode(int requestMode) {
+		this.mRequestMode = requestMode;
+	}
+
+	public int getRequestMode() {
+		return this.mRequestMode;
 	}
 
 	/**
@@ -379,6 +401,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 	public final boolean shouldCache() {
 		return mShouldCache;
 	}
+
 	/**
 	 * Returns true if responses to this request should be cached.
 	 */

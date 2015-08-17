@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.net.TrafficStats;
 import android.os.Build;
 
+import com.kubeiwu.commontool.khttp.Request.RequestMode;
 import com.kubeiwu.commontool.khttp.cache.Cache;
 import com.kubeiwu.commontool.khttp.exception.VolleyError;
 import com.kubeiwu.commontool.khttp.superinterface.Network;
@@ -106,6 +107,7 @@ public class CurrentNetworkDispatcher extends CurrentDispatcher {
 
 			// Parse the response here on the worker thread.
 			Response<T> response = request.parseNetworkResponse(networkResponse);
+			
 			request.addMarker("network-parse-complete");
 			// Write to cache if applicable.
 			// TODO: Only update cache metadata instead of entire record for 304s.

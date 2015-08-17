@@ -16,9 +16,6 @@
 
 package com.kubeiwu.commontool.khttp;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,6 +25,10 @@ import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import com.kubeiwu.commontool.khttp.Request.RequestMode;
 import com.kubeiwu.commontool.khttp.cache.Cache;
 import com.kubeiwu.commontool.khttp.superinterface.Network;
 
@@ -139,7 +140,7 @@ public class RequestQueue {// 一般是单列的
 
 		// Create network dispatchers (and corresponding threads) up to the pool size.
 		for (int i = 0; i < mDispatchers.length; i++) {
-			NetworkDispatcher networkDispatcher = new NetworkDispatcher(mNetworkQueue, mNetwork, mCache, mDelivery);
+			NetworkDispatcher networkDispatcher = new NetworkDispatcher(mCacheQueue, mNetworkQueue, mNetwork, mCache, mDelivery);
 			mDispatchers[i] = networkDispatcher;
 			networkDispatcher.start();
 		}
@@ -221,6 +222,9 @@ public class RequestQueue {// 一般是单列的
 	public Request add(Request request) {
 		// Tag the request as belonging to this queue and add it to the set of current requests.
 		request.setRequestQueue(this);
+
+		onPrepareRequest(request);
+
 		synchronized (mCurrentRequests) {// 安全增加
 			mCurrentRequests.add(request);
 		}
@@ -260,6 +264,27 @@ public class RequestQueue {// 一般是单列的
 		}
 	}
 
+	private void onPrepareRequest(Request request) {
+		int requestMode = request.getRequestMode();
+		switch (requestMode) {
+			case RequestMode.LOAD_NETWORK_ONLY:
+				request.setForceDataFromNetwork(true);
+				request.setShouldCache(false);
+				break;
+			case RequestMode.LOAD_NETWORK_ELSE_CACHE:
+				request.setForceDataFromNetwork(true);
+				request.setShouldCache(true);
+				break;
+			case RequestMode.LOAD_CACHE_ELSE_NETWORK:
+				request.setForceDataFromNetwork(false);
+				request.setShouldCache(true);
+				break;
+			case RequestMode.LOAD_DEFAULT:
+				 //Empty
+				break;
+		}
+	}
+
 	/**
 	 * 是否可以缓存 ，是否强制从网络中获取数据
 	 * 
@@ -276,6 +301,8 @@ public class RequestQueue {// 一般是单列的
 	public <T> T currentThreadExecute(Request<T> request) {
 		// TODO 当前线程执行
 		request.setRequestQueue(this);
+
+		onPrepareRequest(request);
 		// 安全增加
 		synchronized (mCurrentRequests) {
 			mCurrentRequests.add(request);
