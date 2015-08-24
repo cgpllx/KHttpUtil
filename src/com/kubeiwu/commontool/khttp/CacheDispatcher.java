@@ -122,6 +122,7 @@ public class CacheDispatcher extends Thread {
 				// If it is completely expired, just send it to the network.
 				if (entry.isExpired()) {// 如果缓存的时间过期了，同上处理
 					request.addMarker("cache-hit-expired");
+					System.out.println("缓存过期");
 					request.setCacheEntry(entry);// entry中可能有 请求头等信息，所以要放进去给request去使用
 					mNetworkQueue.put(request);
 					continue;
@@ -137,6 +138,7 @@ public class CacheDispatcher extends Thread {
 					// Completely unexpired cache hit. Just deliver the response.
 					mDelivery.postResponse(request, response);
 				} else {
+					System.out.println("缓存过期");
 					// Soft-expired cache hit. We can deliver the cached response,
 					// but we need to also send the request to the network for
 					// refreshing.
