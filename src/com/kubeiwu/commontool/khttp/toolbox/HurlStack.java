@@ -150,6 +150,7 @@ public class HurlStack implements HttpStack {
 	 * @return an HttpEntity populated with data from <code>connection</code>.
 	 */
 	private static HttpEntity entityFromConnection(HttpURLConnection connection) {
+		
 		BasicHttpEntity entity = new BasicHttpEntity();
 		InputStream inputStream;
 		try {
