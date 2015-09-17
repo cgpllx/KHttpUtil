@@ -1,12 +1,16 @@
 //2014-8-8
 package com.kubeiwu.commontool.khttp;
 
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+
 import android.content.Context;
 
-import com.kubeiwu.commontool.khttp.cookiemassage.CookieStore;
 import com.kubeiwu.commontool.khttp.cookiemassage.CookieStoreManager;
-import com.kubeiwu.commontool.khttp.cookiemassage.CookieUtils;
 import com.kubeiwu.commontool.khttp.toolbox.KHttpUtil;
+import com.kubeiwu.commontool.khttp.toolbox.OkHttpStack;
+import com.kubeiwu.easyandroid.manager.cookiesmanager.PersistentCookieStore;
+import com.squareup.okhttp.OkHttpClient;
 
 /**
  * @author cgpllx1@qq.com (www.kubeiwu.com)
@@ -29,6 +33,10 @@ public class KRequestQueueManager {
 	}
 
 	public void init(Context context) {
+//		OkHttpClient httpClient=new OkHttpClient();
+//		httpClient.setCookieHandler(new CookieManager(new PersistentCookieStore(context.getApplicationContext()), CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+//		OkHttpStack okHttpStack = new OkHttpStack(httpClient);
+//		mQueue = KHttpUtil.newRequestQueue(context, okHttpStack);
 		mQueue = KHttpUtil.newRequestQueue(context);
 		mImageLoaderManager = new ImageLoaderManager(context, mQueue);
 
