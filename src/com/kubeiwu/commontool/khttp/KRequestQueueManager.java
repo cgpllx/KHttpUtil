@@ -33,11 +33,19 @@ public class KRequestQueueManager {
 	}
 
 	public void init(Context context) {
+ 
 		OkHttpClient httpClient = new OkHttpClient();
 		httpClient.setCookieHandler(new CookieManager(new PersistentCookieStore(context.getApplicationContext()), CookiePolicy.ACCEPT_ORIGINAL_SERVER));
 		OkHttpStack okHttpStack = new OkHttpStack(httpClient);
-		mQueue = KHttpUtil.newRequestQueue(context, okHttpStack);
+//		mQueue = KHttpUtil.newRequestQueue(context, okHttpStack);
 		// mQueue = KHttpUtil.newRequestQueue(context);
+ 
+//		OkHttpClient httpClient=new OkHttpClient();
+//		httpClient.setCookieHandler(new CookieManager(new PersistentCookieStore(context.getApplicationContext()), CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+//		OkHttpStack okHttpStack = new OkHttpStack(httpClient);
+//		mQueue = KHttpUtil.newRequestQueue(context, okHttpStack);
+		mQueue = KHttpUtil.newRequestQueue(context);
+//>>>>>>> branch 'master' of https://github.com/cgpllx/KHttpUtil.git
 		mImageLoaderManager = new ImageLoaderManager(context, mQueue);
 
 		CookieStoreManager.getInstance().init(context);// 这里耦合比较高，要修改
