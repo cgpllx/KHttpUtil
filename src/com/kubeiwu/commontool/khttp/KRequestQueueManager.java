@@ -34,9 +34,9 @@ public class KRequestQueueManager {
 
 	public void init(Context context) {
  
-		OkHttpClient httpClient = new OkHttpClient();
-		httpClient.setCookieHandler(new CookieManager(new PersistentCookieStore(context.getApplicationContext()), CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-		OkHttpStack okHttpStack = new OkHttpStack(httpClient);
+//		OkHttpClient httpClient = new OkHttpClient();
+//		httpClient.setCookieHandler(new CookieManager(new PersistentCookieStore(context.getApplicationContext()), CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+//		OkHttpStack okHttpStack = new OkHttpStack(httpClient);
 //		mQueue = KHttpUtil.newRequestQueue(context, okHttpStack);
 		// mQueue = KHttpUtil.newRequestQueue(context);
  
