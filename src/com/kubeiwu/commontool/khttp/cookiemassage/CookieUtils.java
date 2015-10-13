@@ -13,6 +13,7 @@ public class CookieUtils implements CookieStore {
 	private static final String SET_COOKIE_KEY = "Set-Cookie";
 	private static final String COOKIE_KEY = "Cookie";
 	private static final String COOKIE_PREFS = "CookiePrefsFile";
+	private static final String SESSION_COOKIE = "sessionid";
 	private SharedPreferences _preferences;
 
 	public CookieUtils(Context context) {
@@ -27,7 +28,7 @@ public class CookieUtils implements CookieStore {
 	 */
 
 	public final void saveCookiesFromHeaders(Map<String, String> headers) {
-		if (headers.containsKey(SET_COOKIE_KEY)) {
+		if (headers.containsKey(SET_COOKIE_KEY) && headers.get(SET_COOKIE_KEY).startsWith(SESSION_COOKIE)) {
 			String cookie = headers.get(SET_COOKIE_KEY);
 			if (!TextUtils.isEmpty(cookie)) {
 				Editor prefEditor = _preferences.edit();
