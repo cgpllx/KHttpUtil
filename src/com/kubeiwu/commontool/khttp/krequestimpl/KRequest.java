@@ -124,6 +124,7 @@ public abstract class KRequest<T> extends Request<T> {
 	 * @param headers
 	 */
 	protected void deliverHeaders(Map<String, String> headers) {
+		System.out.println("headers="+headers);
 		if (mShouldSaveCookies) {
 			CookieStoreManager.getCookieStore().saveCookiesFromHeaders(headers);
 		}
