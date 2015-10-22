@@ -57,6 +57,10 @@ public class KHttpUtil {
 
 		if (stack == null) {
 			if (Build.VERSION.SDK_INT >= 9) {
+//				CookieManager cookieManager = new CookieManager();
+//				PersistentCookieStore cookieStore=new PersistentCookieStore(context);
+//				CookieManager cookieManager=new CookieManager(cookieStore, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+//				CookieHandler.setDefault(cookieManager);
 				stack = new HurlStack();
 			} else {
 				// Prior to Gingerbread, HttpUrlConnection was unreliable.

@@ -1,16 +1,10 @@
 //2014-8-8
 package com.kubeiwu.commontool.khttp;
 
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-
 import android.content.Context;
 
 import com.kubeiwu.commontool.khttp.cookiemassage.CookieStoreManager;
 import com.kubeiwu.commontool.khttp.toolbox.KHttpUtil;
-import com.kubeiwu.commontool.khttp.toolbox.OkHttpStack;
-import com.kubeiwu.easyandroid.manager.cookiesmanager.PersistentCookieStore;
-import com.squareup.okhttp.OkHttpClient;
 
 /**
  * @author cgpllx1@qq.com (www.kubeiwu.com)

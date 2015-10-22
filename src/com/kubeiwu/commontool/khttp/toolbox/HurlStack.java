@@ -101,6 +101,7 @@ public class HurlStack implements HttpStack {
 		}
 		URL parsedUrl = new URL(url);
 		HttpURLConnection connection = openConnection(parsedUrl, request);
+		
 		for (String headerName : map.keySet()) {// 添加header
 			connection.addRequestProperty(headerName, map.get(headerName));
 		}

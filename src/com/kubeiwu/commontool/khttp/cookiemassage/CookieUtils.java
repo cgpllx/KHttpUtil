@@ -29,8 +29,11 @@ public class CookieUtils implements CookieStore {
 	 */
 
 	public final void saveCookiesFromHeaders(Map<String, String> headers) {
+		System.out.println(headers);
+		System.out.println(headers.get(SET_COOKIE_KEY).toUpperCase(Locale.CHINA).startsWith(SESSION_COOKIE));
 		if (headers.containsKey(SET_COOKIE_KEY) && headers.get(SET_COOKIE_KEY).toUpperCase(Locale.CHINA).startsWith(SESSION_COOKIE)) {
 			String cookie = headers.get(SET_COOKIE_KEY);
+			System.out.println("保存的cookies="+cookie);
 			if (!TextUtils.isEmpty(cookie)) {
 				Editor prefEditor = _preferences.edit();
 				prefEditor.putString(COOKIE_KEY, cookie);
@@ -47,6 +50,7 @@ public class CookieUtils implements CookieStore {
 
 	public final void addCookiesToHeaders(Map<String, String> headers) {
 		String sessionId = _preferences.getString(COOKIE_KEY, "");
+		System.out.println("添加sessionId="+sessionId);
 		if (!TextUtils.isEmpty(sessionId)) {
 			headers.put(COOKIE_KEY, sessionId);
 		}
